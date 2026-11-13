@@ -38,7 +38,8 @@ class Page extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('status', CommonStatusEnum::ACTIVE->value)->whereNotNull('published_at')->where('published_at', '<=', now());
+        return $query->where('status', CommonStatusEnum::ACTIVE->value)
+            ->where(fn ($q) => $q->whereNull('published_at')->orWhere('published_at', '<=', now()));
     }
 
     protected static function booted(): void

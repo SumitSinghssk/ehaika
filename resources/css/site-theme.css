@@ -1,0 +1,181 @@
+/*
+ * The website's look, shared by the website (website.css) and the admin content editor (admin.css):
+ * colour tokens for light and dark, the font, article text (.prose-eth) and content blocks (.ps-content).
+ * Admin previews get the look with class="site-canvas" (plus "theme-dark" when SITE_THEME=dark).
+ */
+.site-canvas {
+    --color-paper: #ffffff;
+    --color-tone: #f6f7fb;
+    --color-ink: #0b1220;
+    --color-soft: #5b6474;
+    --color-fade: #a3aab8;
+    --color-line: #e6e9f0;
+    --color-accent: #2563eb;
+    --color-accent-ink: #1e40af;
+    --color-accent-tint: #eef3ff;
+    --radius: 20px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.prose-eth {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #2a3242;
+}
+.prose-eth > * + * {
+    margin-top: 1.1em;
+}
+.prose-eth :is(h1, h2) {
+    margin-top: 2.2em;
+    font-size: clamp(1.625rem, 2.4vw, 2.125rem);
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+}
+.prose-eth h3 {
+    margin-top: 1.8em;
+    font-size: 1.3125rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+}
+.prose-eth h4 {
+    margin-top: 1.6em;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth > :first-child {
+    margin-top: 0;
+}
+.prose-eth strong {
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.prose-eth :is(ul, ol) {
+    padding-left: 1.4em;
+}
+.prose-eth ul {
+    list-style: disc;
+}
+.prose-eth ol {
+    list-style: decimal;
+}
+.prose-eth li + li {
+    margin-top: 0.45em;
+}
+.prose-eth li::marker {
+    color: var(--color-accent);
+}
+.prose-eth blockquote {
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-accent-tint);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1em 1.4em;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block: 2em;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-line);
+}
+.prose-eth table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.975rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.prose-eth :is(th, td) {
+    padding: 0.75em 1em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-line);
+}
+.prose-eth th {
+    background: var(--color-tone);
+    font-weight: 600;
+    color: var(--color-ink);
+}
+/* dark theme: switched on with SITE_THEME=dark (config ethaika.theme) */
+.theme-dark {
+    --color-paper: #0a0a0a;
+    --color-tone: #111112;
+    --color-ink: #fafafa;
+    --color-soft: #a1a1aa;
+    --color-fade: #71717a;
+    --color-line: #232326;
+    --color-accent: #fafafa;
+    --color-accent-ink: #ffffff;
+    --color-accent-tint: #18181b;
+    color-scheme: dark;
+}
+.theme-dark .prose-eth {
+    color: #d4d4d8;
+}
+/* blog article: calmer reading type, sectioned headings and the "On this page" list */
+.prose-eth {
+    line-height: 1.65;
+}
+.prose-eth :is(h1, h2) {
+    margin-top: 2.4em;
+    padding-bottom: 0.55em;
+    border-bottom: 1px solid var(--color-line);
+    font-size: clamp(1.5rem, 2.1vw, 1.875rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+.prose-eth h3 {
+    margin-top: 2em;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+}
+.prose-eth :is(h2, h3, h4) {
+    scroll-margin-top: 110px;
+}
+.prose-eth :not(pre) > code {
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: var(--color-tone);
+    font-size: 0.875em;
+}
+/* content blocks from the admin editor take the site's colours and font, in either theme */
+:is(.site-light, .site-canvas) .ps-content,
+.site-canvas.ps-content {
+    --ps-ink: var(--color-ink);
+    --ps-muted: var(--color-soft);
+    --ps-soft: var(--color-tone);
+    --ps-line: var(--color-line);
+    --ps-accent: var(--color-accent);
+    --ps-on-accent: var(--color-paper);
+    --ps-radius: var(--radius);
+    font-family: inherit;
+}
+.theme-dark .ps-content [style*='background-color']:not(.ps-light) {
+    background-color: var(--color-tone) !important;
+    color: var(--color-ink) !important;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.theme-dark .ps-content .ps-light[style*='background-color'] {
+    background-color: #18181b !important;
+}
+.theme-dark .ps-content .ps-points li::before {
+    background-color: var(--color-accent-tint);
+}

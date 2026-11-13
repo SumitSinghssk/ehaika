@@ -4,7 +4,8 @@
     use App\Helpers\Settings;
 
     $appName = rescue(fn () => Settings::appName(), config('app.name', 'Ethaika'), report: false);
-    $logoSetting = rescue(fn () => Settings::logoLight(), null, report: false);
+    $dark = config('ethaika.theme') === 'dark';
+    $logoSetting = rescue(fn () => $dark ? Settings::logoDark() : Settings::logoLight(), null, report: false);
     $favicon = rescue(fn () => Settings::favicon(), null, report: false);
     $logo = $logoSetting ?: asset('images/site/ethaika-logo.webp');
 @endphp
@@ -23,13 +24,13 @@
         @vite(['resources/css/website.css'])
     </head>
 
-    <body class="site-light bg-paper text-ink min-h-screen antialiased">
+    <body class="site-light {{ $dark ? 'theme-dark' : '' }} bg-paper text-ink min-h-screen antialiased">
         {{ $before ?? '' }}
         <div class="relative flex min-h-screen flex-col overflow-hidden">
             <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[80vh] bg-[radial-gradient(60%_60%_at_50%_0%,#e7eeff_0%,#ffffff_70%)]" aria-hidden="true"></div>
             <header class="wrap flex h-[72px] items-center">
                 <a href="{{ url('/') }}" aria-label="{{ $appName }} home">
-                    <img src="{{ $logo }}" alt="{{ $appName }}" class="h-9 w-auto {{ $logoSetting ? '' : 'brightness-0' }}" />
+                    <img src="{{ $logo }}" alt="{{ $appName }}" class="h-9 w-auto {{ $logoSetting || $dark ? '' : 'brightness-0' }}" />
                 </a>
             </header>
             <main id="main" class="wrap flex flex-1 items-center justify-center py-16 text-center">

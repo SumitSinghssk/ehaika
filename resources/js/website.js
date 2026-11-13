@@ -263,12 +263,40 @@ const rise = (targets, trigger, vars = {}) => {
     gsap.to(els, {
         opacity: 1,
         y: 0,
-        duration: 1,
+        duration: 1.1,
         ease: 'expo.out',
         stagger: 0.08,
         ...vars,
         scrollTrigger: { trigger: trigger || els[0], start: 'top 88%', once: true },
     });
+};
+
+const splitWords = (el) => {
+    if (el.dataset.split) return [];
+    el.dataset.split = '1';
+    const words = [];
+    const walk = (node) => {
+        Array.from(node.childNodes).forEach((n) => {
+            if (n.nodeType === Node.ELEMENT_NODE) return walk(n);
+            if (n.nodeType !== Node.TEXT_NODE || !n.textContent.trim()) return;
+            const frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach((part) => {
+                if (!part) return;
+                if (/^\s+$/.test(part)) return frag.append(part);
+                const outer = document.createElement('span');
+                const inner = document.createElement('span');
+                outer.className = 'w';
+                inner.className = 'wi';
+                inner.textContent = part;
+                outer.append(inner);
+                frag.append(outer);
+                words.push(inner);
+            });
+            n.replaceWith(frag);
+        });
+    };
+    walk(el);
+    return words;
 };
 
 function setupMotion() {
@@ -280,9 +308,17 @@ function setupMotion() {
     }
 
     $$('h2').forEach((h) => {
-        const lines = $$('.line > span', h);
-        if (!lines.length) return;
-        gsap.from(lines, { yPercent: 110, duration: 1.15, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: h, start: 'top 90%', once: true } });
+        if (!$('.line', h) && !h.closest('.prose-eth')) return;
+        const words = splitWords(h);
+        if (!words.length) return;
+        gsap.from(words, {
+            yPercent: 105,
+            opacity: 0,
+            duration: 1.1,
+            ease: 'expo.out',
+            stagger: Math.min(0.05, 0.6 / words.length),
+            scrollTrigger: { trigger: h, start: 'top 88%', once: true },
+        });
     });
 
     $$('.hero-in').forEach((el) => (el.dataset.risen = '1'));
@@ -324,21 +360,60 @@ function setupMotion() {
     rise('.contact-in', '#contact', { stagger: 0.12 });
 
     gsap.from('.foot-rise', { opacity: 0, y: 24, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '#siteFooter', start: 'top 85%', once: true } });
-    gsap.from('.foot-mark .line > span', { yPercent: 100, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.foot-mark', start: 'top 95%', once: true } });
 
     ScrollTrigger.batch($$('.will-rise').filter((el) => !el.dataset.risen), {
         start: 'top 90%',
         once: true,
-        onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.07 }),
+        onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.07 }),
     });
     $$('.photo img').forEach((img) => gsap.to(img, { scale: 1, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } }));
 
     addEventListener('load', () => ScrollTrigger.refresh());
 }
 
+function setupToc() {
+    const nav = $('[data-toc]');
+    const source = $('[data-toc-source]');
+    if (!nav || !source) return;
+    const heads = $$('h2', source).filter((h) => h.textContent.trim());
+    if (heads.length < 2) return;
+
+    const list = $('[data-toc-list]', nav);
+    const links = heads.map((h, i) => {
+        if (!h.id) {
+            const base = h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || `section-${i + 1}`;
+            let id = base;
+            for (let n = 2; document.getElementById(id); n++) id = `${base}-${n}`;
+            h.id = id;
+        }
+        const a = document.createElement('a');
+        a.href = `#${h.id}`;
+        a.textContent = h.textContent.trim();
+        a.className = h.tagName === 'H3' ? 'toc-link toc-sub' : 'toc-link';
+        const li = document.createElement('li');
+        li.append(a);
+        list.append(li);
+        return a;
+    });
+    nav.hidden = false;
+
+    let ticking = false;
+    const mark = () => {
+        ticking = false;
+        let current = 0;
+        heads.forEach((h, i) => {
+            if (h.getBoundingClientRect().top < HEADER + 80) current = i;
+        });
+        links.forEach((a, i) => (i === current ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    addEventListener('scroll', () => ticking || ((ticking = true), requestAnimationFrame(mark)), { passive: true });
+    mark();
+}
+
 window.setupContentBlocks = setupFaqs;
 
 const boot = () => {
+    setupToc();
     setupFaqs();
     setupScroll();
     setupHeader();

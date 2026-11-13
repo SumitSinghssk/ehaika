@@ -27,8 +27,15 @@
         'uploadUrl' => route('admin.images.store'),
         'placeholder' => asset('images/placeholder.svg'),
     ];
+    $site = 'site-canvas' . (config('ethaika.theme') === 'dark' ? ' theme-dark' : '');
     $iconButton = 'grid cursor-pointer place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white';
 @endphp
+
+@once
+    @push('heads')
+        @include('layouts.partials.website.fonts')
+    @endpush
+@endonce
 
 <div x-data="contentEditor(@js($config))" {{ $attributes }}>
     <textarea name="{{ $name }}" x-model="html" class="hidden" aria-hidden="true" tabindex="-1">{{ $html }}</textarea>
@@ -46,7 +53,7 @@
                     x-on:click="openEditor(template.key)"
                     class="group cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white text-left transition hover:border-blue-400 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-400"
                 >
-                    <span class="pointer-events-none relative block h-40 overflow-hidden border-b border-slate-100 bg-white select-none dark:border-slate-800" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, 1100))">
+                    <span class="pointer-events-none relative block h-40 overflow-hidden border-b border-slate-100 bg-white select-none dark:border-slate-800 {{ $site }}" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, 1100))">
                         <div class="ps-content absolute top-0 left-0 origin-top-left p-8" style="width: 1100px" x-html="templateMarkup(template.key)"></div>
                     </span>
                     <span class="block px-3.5 py-3">
@@ -93,10 +100,10 @@
             type="button"
             x-on:click="openEditor()"
             title="Open the content builder"
-            class="group relative mt-4 block max-h-96 w-full cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white p-5 text-left dark:border-slate-700"
+            class="group relative mt-4 block max-h-96 w-full cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white p-5 text-left dark:border-slate-700 {{ $site }}"
         >
-            <div class="ps-content pointer-events-none" x-html="html"></div>
-            <span class="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-white to-transparent"></span>
+            <div class="ps-content prose-eth pointer-events-none" x-html="html"></div>
+            <span class="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-[var(--color-paper)] to-transparent"></span>
             <span class="absolute inset-0 grid place-items-center bg-slate-900/0 transition group-hover:bg-slate-900/5">
                 <span class="rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-slate-900 opacity-0 shadow ring-1 ring-slate-900/10 transition group-hover:opacity-100">
                     Open the builder
@@ -234,7 +241,7 @@
                                             :aria-label="'Add ' + BLOCK_INFO[type].name"
                                             class="group block w-full cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white text-left transition hover:border-blue-400 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-400"
                                         >
-                                            <span class="pointer-events-none relative block h-32 overflow-hidden bg-white select-none" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, previewWidth(type), 128))">
+                                            <span class="pointer-events-none relative block h-32 overflow-hidden bg-white select-none {{ $site }}" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, previewWidth(type), 128))">
                                                 <div class="ps-content absolute top-0 left-0 origin-top-left p-5" :style="'width:' + previewWidth(type) + 'px'" x-html="previewMarkup(type)"></div>
                                             </span>
                                             <span class="flex items-start gap-2.5 border-t border-slate-100 px-3 py-2.5 dark:border-slate-800">
@@ -287,7 +294,7 @@
                                             x-on:click="useTemplate(template.key)"
                                             class="group block w-full cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white text-left transition hover:border-blue-400 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-400"
                                         >
-                                            <span class="pointer-events-none relative block h-36 overflow-hidden bg-white select-none" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, 1100))">
+                                            <span class="pointer-events-none relative block h-36 overflow-hidden bg-white select-none {{ $site }}" aria-hidden="true" x-init="$nextTick(() => fitPreview($el, 1100))">
                                                 <div class="ps-content absolute top-0 left-0 origin-top-left p-8" style="width: 1100px" x-html="templateMarkup(template.key)"></div>
                                             </span>
                                             <span class="block border-t border-slate-100 px-3 py-2.5 dark:border-slate-800">
@@ -309,8 +316,8 @@
                             x-on:drop="onCanvasDrop($event)"
                             x-on:dragleave="if (!$el.contains($event.relatedTarget)) dropIndex = null"
                         >
-                            <div class="mx-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5 transition-[width] duration-300" :class="[deviceWidth, device === 'mobile' ? 'p-4' : 'p-6 sm:p-8']">
-                                <div x-show="blocks.length" class="ps-content">
+                            <div class="mx-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/5 transition-[width] duration-300 {{ $site }}" :class="[deviceWidth, device === 'mobile' ? 'p-4' : 'p-6 sm:p-8']">
+                                <div x-show="blocks.length" class="ps-content prose-eth">
                                     <template x-for="(block, index) in blocks" :key="block.id">
                                         <div
                                             :data-block="block.id"

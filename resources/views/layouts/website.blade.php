@@ -1,4 +1,4 @@
-<x-app body-class="site-light">
+<x-app :body-class="'site-light' . (config('ethaika.theme') === 'dark' ? ' theme-dark' : '')">
     @include('layouts.partials.website.seo', [
         'pageTitle' => $title,
         'pageDescription' => $description,

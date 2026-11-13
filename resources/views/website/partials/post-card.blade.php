@@ -1,23 +1,24 @@
 @php
     $heading ??= 'h2';
     $priority ??= false;
+    $category = $post->categories->first();
 @endphp
 
-<a href="{{ $post->url() }}" class="post will-rise card group flex flex-col overflow-hidden">
-    <div class="bg-tone overflow-hidden">
+<a href="{{ $post->url() }}" class="post will-rise group flex flex-col">
+    <div class="border-line bg-tone relative overflow-hidden rounded-[16px] border">
         @if ($post->imageUrl())
-            <x-picture :src="$post->featured_image" location="storage" :priority="$priority" sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw" class="aspect-[16/10] w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-105" />
+            <x-picture :src="$post->featured_image" location="storage" :priority="$priority" sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw" class="aspect-[16/10] w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-[1.04]" />
         @else
             <div class="aspect-[16/10]"></div>
         @endif
+        @if ($category)
+            <span class="bg-paper/85 text-ink absolute top-3 left-3 rounded-[8px] px-2.5 py-1 text-[0.75rem] font-medium backdrop-blur">{{ $category->name }}</span>
+        @endif
     </div>
-    <div class="flex flex-1 flex-col p-7">
-        <p class="text-soft flex flex-wrap items-center gap-x-3 text-[0.875rem] font-medium">
-            @if ($post->categories->isNotEmpty())<span class="text-accent font-semibold">{{ $post->categories->first()->name }}</span><span aria-hidden="true">·</span>@endif
-            <time datetime="{{ optional($post->published_at)->toDateString() }}">{{ optional($post->published_at)->format('F j, Y') }}</time>
-        </p>
-        <{{ $heading }} class="mt-3 text-[1.3125rem] leading-snug font-semibold tracking-[-0.02em]">{{ $post->title }}</{{ $heading }}>
-        <p class="text-soft mt-3">{{ $post->summary(140) }}</p>
-        <span class="text-accent mt-auto inline-flex items-center gap-2 pt-6 font-semibold">Read article <svg class="size-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5" /></svg></span>
-    </div>
+    <{{ $heading }} class="group-hover:text-accent mt-5 text-[1.25rem] leading-[1.3] font-semibold tracking-[-0.015em] transition-colors">{{ $post->title }}</{{ $heading }}>
+    <p class="text-soft mt-2 line-clamp-2 text-[0.9375rem] leading-relaxed">{{ $post->summary(160) }}</p>
+    <p class="text-fade mt-3 text-[0.8125rem]">
+        <time datetime="{{ optional($post->published_at)->toDateString() }}">{{ optional($post->published_at)->format('M j, Y') }}</time>
+        <span aria-hidden="true"> · </span>{{ $post->readingMinutes() }} min read
+    </p>
 </a>

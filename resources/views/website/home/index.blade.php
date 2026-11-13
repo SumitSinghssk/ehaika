@@ -195,7 +195,7 @@
                 </article>
             </div>
 
-            <div class="cmp card will-rise mt-4 overflow-x-auto">
+            <div class="cmp card will-rise mt-4 overflow-x-auto overflow-y-hidden">
                 <table class="w-full min-w-[860px] border-collapse text-left text-[0.9375rem]">
                     <caption class="sr-only">Ethaika compared with vendor tools, evaluation frameworks and observability tools</caption>
                     <thead>

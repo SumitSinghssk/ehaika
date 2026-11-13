@@ -66,7 +66,7 @@
     @endif
     <link rel="canonical" href="{{ $canonical }}" />
     <meta name="robots" content="{{ $index ? 'index, follow, max-image-preview:large' : 'noindex, nofollow' }}" />
-    <meta name="theme-color" content="#f6f6fa" />
+    <meta name="theme-color" content="{{ config('ethaika.theme') === 'dark' ? '#0a0a0a' : '#f6f6fa' }}" />
     <link rel="icon" href="{{ $favicon }}" />
     <link rel="apple-touch-icon" href="{{ asset('images/site/apple-touch-icon.png') }}" />
 

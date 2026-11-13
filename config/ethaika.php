@@ -2,6 +2,8 @@
 
 return [
 
+    'theme' => env('SITE_THEME', 'light'),
+
     'tagline' => 'Enabling responsible AI',
 
     'hero' => [

@@ -31,9 +31,10 @@
     $panel = 'bg-paper border-line border shadow-[0_24px_48px_-24px_rgb(11_18_32/0.25)]';
 
     $name = Settings::appName();
-    $logoSetting = Settings::logoLight();
+    $dark = config('ethaika.theme') === 'dark';
+    $logoSetting = $dark ? Settings::logoDark() : Settings::logoLight();
     $logo = $logoSetting ?: asset('images/site/ethaika-logo.webp');
-    $logoInk = $logoSetting ? '' : 'brightness-0';
+    $logoInk = $logoSetting || $dark ? '' : 'brightness-0';
 @endphp
 
 <header

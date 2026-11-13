@@ -52,20 +52,31 @@ class BlogController extends Controller
 
     private function listing(?BlogCategory $category)
     {
+        $search = trim((string) request()->query('q', ''));
+        $search = mb_substr($search, 0, 80);
+
         $posts = Blog::published()
             ->with('categories')
             ->when($category, fn ($q) => $q->whereHas('categories', fn ($c) => $c->whereKey($category->id)))
+            ->when($search !== '', fn ($q) => $q->where(fn ($w) => $w
+                ->where('title', 'like', '%'.addcslashes($search, '%_\\').'%')
+                ->orWhere('excerpt', 'like', '%'.addcslashes($search, '%_\\').'%')))
             ->latest('published_at')
             ->paginate(9)
             ->withQueryString();
 
         abort_if($posts->currentPage() > max(1, $posts->lastPage()), 404);
 
+        $featured = null;
+        $grid = $posts->getCollection();
+
         $categories = BlogCategory::where('status', CommonStatusEnum::ACTIVE->value)
             ->whereHas('blogs', fn ($q) => $q->published())
+            ->withCount(['blogs' => fn ($q) => $q->published()])
             ->orderBy('name')
             ->get();
+        $total = Blog::published()->count();
 
-        return view('website.blog.index', compact('posts', 'categories', 'category'));
+        return view('website.blog.index', compact('posts', 'categories', 'category', 'featured', 'grid', 'search', 'total'));
     }
 }
