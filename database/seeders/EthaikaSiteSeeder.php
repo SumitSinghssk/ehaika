@@ -51,11 +51,12 @@ class EthaikaSiteSeeder extends Seeder
         ]);
 
         $value = (array) $setting->value;
-        $value['app_name'] = 'Ethaika';
-        $value['emails'] = [];
-        $value['phones'] = [];
-        $value['addresses'] = [];
-        $value['social_links'] = [['platform' => 'LinkedIn', 'url' => 'https://www.linkedin.com/company/ethaika/']];
+        if (blank($value['app_name'] ?? null) || $value['app_name'] === 'Laravel') {
+            $value['app_name'] = 'Ethaika';
+        }
+        if (empty($value['social_links'])) {
+            $value['social_links'] = [['platform' => 'LinkedIn', 'url' => 'https://www.linkedin.com/company/ethaika/']];
+        }
         $setting->value = $value;
         $setting->save();
 
@@ -66,6 +67,9 @@ class EthaikaSiteSeeder extends Seeder
     private function save(MenuBuilder $menus, string $key, array $items): void
     {
         $menu = $menus->menu($key);
+        if (! empty($menus->editorRows($menu))) {
+            return;
+        }
         [$clean, $errors] = $menus->validate($menu, ['items' => $items]);
 
         if ($errors) {

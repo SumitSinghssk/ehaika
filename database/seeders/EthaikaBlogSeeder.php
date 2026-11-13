@@ -75,8 +75,5 @@ class EthaikaBlogSeeder extends Seeder
             ]);
             $blog->categories()->sync(collect($p['categories'])->map(fn ($slug) => $categories[$slug]->id)->all());
         }
-
-        Blog::whereNotIn('slug', collect($posts)->pluck('slug'))->update(['status' => CommonStatusEnum::INACTIVE->value]);
-        BlogCategory::whereNotIn('slug', array_keys($categories))->update(['status' => CommonStatusEnum::INACTIVE->value]);
     }
 }
