@@ -6,18 +6,11 @@
         ->filter(fn ($item) => filled($item['label'] ?? null));
 
     $columns = $tree->filter(fn ($item) => ! empty($item['children']))
-        ->map(fn ($item) => ['heading' => $item['label'], 'links' => collect($item['children'])->filter(fn ($c) => filled($c['label'] ?? null))->values()->all()])
+        ->map(fn ($item) => ['heading' => $item['label'], 'url' => $item['url'] ?? null, 'new_tab' => (bool) ($item['new_tab'] ?? false), 'links' => collect($item['children'])->filter(fn ($c) => filled($c['label'] ?? null))->values()->all()])
         ->values();
     $loose = $tree->filter(fn ($item) => empty($item['children']))->values();
     if ($loose->isNotEmpty()) {
-        $columns->push(['heading' => 'More', 'links' => $loose->all()]);
-    }
-    if ($columns->isEmpty()) {
-        $columns = collect([['heading' => 'Product', 'links' => [
-            ['label' => 'How it works', 'url' => url('/#how')],
-            ['label' => 'Features', 'url' => url('/#features')],
-            ['label' => 'FAQ', 'url' => url('/#faq')],
-        ]]]);
+        $columns->push(['heading' => 'More', 'url' => null, 'new_tab' => false, 'links' => $loose->all()]);
     }
 
     $isLegal = fn ($l) => Str::contains(Str::lower($l['label'] ?? ''), ['privacy', 'terms', 'cookie']);
@@ -53,16 +46,37 @@
                 @endif
             </div>
 
-            <div class="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 md:col-span-6 md:col-start-6">
+            <{{ $columns->isNotEmpty() ? 'nav' : 'div' }} @if ($columns->isNotEmpty()) aria-label="Footer" @endif class="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 md:col-span-6 md:col-start-6">
                 @foreach ($columns as $column)
-                    <nav class="foot-rise" aria-label="{{ $column['heading'] }}">
-                        <h2 class="text-soft text-[0.875rem]">{{ $column['heading'] }}</h2>
+                    <div class="foot-rise">
+                        <h2 class="text-soft text-[0.875rem]">
+                            @if ($column['url'])
+                                <a href="{{ $column['url'] }}" @if ($column['new_tab']) target="_blank" rel="noopener" @endif class="hover:text-ink transition-colors">{{ $column['heading'] }}</a>
+                            @else
+                                {{ $column['heading'] }}
+                            @endif
+                        </h2>
                         <ul class="mt-4 grid gap-2.5">
                             @foreach ($column['links'] as $link)
-                                <li><a href="{{ $link['url'] ?? '#' }}" @if ($link['new_tab'] ?? false) target="_blank" rel="noopener" @endif class="ulink font-medium">{{ $link['label'] }}</a></li>
+                                <li>
+                                    @if (filled($link['url'] ?? null))
+                                        <a href="{{ $link['url'] }}" @if ($link['new_tab'] ?? false) target="_blank" rel="noopener" @endif @if (rtrim($link['url'], '/') === rtrim(url()->current(), '/')) aria-current="page" @endif class="ulink font-medium">{{ $link['label'] }}</a>
+                                    @else
+                                        <span class="font-medium">{{ $link['label'] }}</span>
+                                    @endif
+                                    @if (! empty($link['children']))
+                                        <ul class="border-line mt-2.5 grid gap-2 border-l pl-3">
+                                            @foreach ($link['children'] as $sub)
+                                                @if (filled($sub['label'] ?? null) && filled($sub['url'] ?? null))
+                                                    <li><a href="{{ $sub['url'] }}" @if ($sub['new_tab'] ?? false) target="_blank" rel="noopener" @endif class="ulink text-soft text-[0.9375rem]">{{ $sub['label'] }}</a></li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </li>
                             @endforeach
                         </ul>
-                    </nav>
+                    </div>
                 @endforeach
                 @if ($phones->isNotEmpty() || $addresses->isNotEmpty() || $emails->count() > 1)
                     <div class="foot-rise">
@@ -80,7 +94,7 @@
                         </ul>
                     </div>
                 @endif
-            </div>
+            </{{ $columns->isNotEmpty() ? 'nav' : 'div' }}>
 
             <a href="#main" class="foot-rise ulink self-start justify-self-start font-medium whitespace-nowrap md:col-span-1 md:justify-self-end" data-top>Back to top</a>
         </div>

@@ -133,7 +133,7 @@ test('the website shows dropdowns, side menus and footer columns', function () {
         ->assertSee('Show links under Design')
         ->assertSeeHtml('target="_blank" rel="noopener"')
         ->assertSee('href="'.url('/services/design/logos').'"', false)
-        ->assertSeeInOrder(['text-site-footer-heading text-sm font-semibold">', 'Company</p>'], false)
+        ->assertSeeInOrder(['aria-label="Footer"', 'Company', 'Careers', 'Internships'], false)
         ->assertSee('Internships')
         ->assertSee('aria-label="Footer"', false)
         ->assertSee('aria-current="page"', false);
