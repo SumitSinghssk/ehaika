@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AdminUserSeeder::class,
             SeoSeeder::class,
+            EthaikaSiteSeeder::class,
+            EthaikaBlogSeeder::class,
         ]);
     }
 }

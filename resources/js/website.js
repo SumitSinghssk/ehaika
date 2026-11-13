@@ -1,7 +1,6 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
-import Swiper from 'swiper/bundle';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -9,7 +8,6 @@ import { setupFaqs } from './admin/content-blocks';
 
 gsap.registerPlugin(ScrollTrigger);
 window.Alpine = Alpine;
-window.Swiper = Swiper;
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (sel, root = document) => root.querySelector(sel);
