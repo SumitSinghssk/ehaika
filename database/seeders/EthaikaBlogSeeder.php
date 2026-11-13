@@ -10,16 +10,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * Ethaika's three articles from ethaika.com/blog, with their images, in Admin → Blog.
- *
- *   php artisan db:seed --class=EthaikaBlogSeeder
- *
- * Bodies live in database/seeders/content/ethaika-blog/*.html and images in database/seeders/assets/blog.
- * Running it again updates the same posts (matched by slug). The starter kit's demo posts and
- * categories (agency topics) are set to Inactive so the blog only shows Ethaika's articles;
- * nothing is deleted, and they can be switched back on in Admin → Blog.
- */
 class EthaikaBlogSeeder extends Seeder
 {
     private const FOLDER = 'blogs/ethaika';
@@ -86,7 +76,6 @@ class EthaikaBlogSeeder extends Seeder
             $blog->categories()->sync(collect($p['categories'])->map(fn ($slug) => $categories[$slug]->id)->all());
         }
 
-        // keep the blog Ethaika-only: switch the starter kit's demo posts and categories off (not deleted)
         Blog::whereNotIn('slug', collect($posts)->pluck('slug'))->update(['status' => CommonStatusEnum::INACTIVE->value]);
         BlogCategory::whereNotIn('slug', array_keys($categories))->update(['status' => CommonStatusEnum::INACTIVE->value]);
     }

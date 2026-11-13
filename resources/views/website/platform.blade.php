@@ -1,7 +1,3 @@
-{{--
-    Platform: ethaika.com/enterprise-ai-decision-intelligence, in the home page's design.
-    Copy: config('ethaika.platform'). Motion: resources/js/website.js.
---}}
 @php
     $p = config('ethaika.platform');
     $mark = [
@@ -20,7 +16,6 @@
         'secondary' => ['Explore Features', route('features')],
     ])
 
-    {{-- the four questions --}}
     <section class="wrap pb-[clamp(72px,8vw,120px)]" aria-label="The questions enterprises are asking">
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($p['questions'] as $q)
@@ -37,7 +32,6 @@
         </div>
     </section>
 
-    {{-- the hidden enterprise problem --}}
     <section class="bg-tone" aria-labelledby="hidden-title">
         <div class="sec wrap">
             <div class="grid gap-6 md:grid-cols-12 md:items-end">
@@ -64,7 +58,6 @@
         </div>
     </section>
 
-    {{-- the cost problem --}}
     <section class="sec wrap" aria-labelledby="cost-title">
         <div class="mx-auto max-w-[760px] text-center">
             <h2 id="cost-title" class="t-head"><span class="line"><span>{{ $p['cost']['title'] }}</span></span></h2>
@@ -81,7 +74,6 @@
         <p class="will-rise mx-auto mt-10 max-w-[62ch] text-center font-semibold">{{ $p['cost']['after'] }}</p>
     </section>
 
-    {{-- why existing solutions fall short --}}
     <section class="bg-tone" aria-labelledby="gaps-title">
         <div class="sec wrap grid gap-12 md:grid-cols-12">
             <div class="md:col-span-5">
@@ -102,7 +94,6 @@
         </div>
     </section>
 
-    {{-- enter ethaika: the four capabilities, as a tab viewer --}}
     <section id="capabilities" class="sec wrap" aria-labelledby="enter-title">
         <div class="mx-auto max-w-[860px] text-center">
             <h2 id="enter-title" class="t-head"><span class="line"><span>{{ $p['enter']['title'] }}</span></span></h2>
@@ -137,7 +128,6 @@
         <p class="will-rise mt-12 text-center text-[clamp(1.375rem,2.4vw,2rem)] font-semibold tracking-[-0.025em]">{{ $p['enter']['after'] }}</p>
     </section>
 
-    {{-- how it works --}}
     <section class="bg-tone" aria-labelledby="how-title">
         <div class="sec wrap grid gap-12 lg:grid-cols-12 lg:items-center">
             <div class="lg:col-span-5">
@@ -156,7 +146,6 @@
         </div>
     </section>
 
-    {{-- why this matters now --}}
     <section class="sec wrap" aria-labelledby="now-title">
         <div class="mx-auto max-w-[760px] text-center">
             <h2 id="now-title" class="t-head"><span class="line"><span>{{ $p['now']['title'] }}</span></span></h2>
@@ -174,7 +163,6 @@
         <p class="will-rise mt-10 text-center font-semibold">{{ $p['now']['after'] }}</p>
     </section>
 
-    {{-- why ethaika wins: figures and the comparison --}}
     <section class="bg-tone" aria-labelledby="wins-title">
         <div class="sec wrap">
             <div class="mx-auto max-w-[760px] text-center">
@@ -217,7 +205,6 @@
         </div>
     </section>
 
-    {{-- vision --}}
     <section class="sec wrap" aria-labelledby="vision-title">
         <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
             <div class="lg:col-span-6">

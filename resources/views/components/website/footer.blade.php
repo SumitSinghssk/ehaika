@@ -1,10 +1,3 @@
-{{--
-    Site footer: a designed close on the tone field.
-    Link columns come from Admin → Menus → Footer (a top-level link with nested links becomes a column with its heading;
-    loose top-level links gather into one column). Links named Privacy, Terms or Cookie move to the bottom row.
-    Emails, phones, addresses and social links come from Admin → Settings; an empty group is hidden.
-    The display line is the first email in Settings, or the name at full width when there is none.
---}}
 @php
     use App\Helpers\Settings;
     use Illuminate\Support\Str;
@@ -43,7 +36,6 @@
 
     $name = Settings::appName();
     $display = $emails->first();
-    // the logo from Admin → Settings (light logo = for light backgrounds); the bundled white wordmark is shown in ink
     $logoSetting = Settings::logoLight();
     $logo = $logoSetting ?: asset('images/site/ethaika-logo.webp');
     $logoInk = $logoSetting ? '' : 'brightness-0';
@@ -56,7 +48,6 @@
                 <a href="{{ url('/') }}" class="inline-block" aria-label="{{ $name }} home">
                     <img src="{{ $logo }}" alt="{{ $name }}" width="69" height="44" loading="lazy" class="h-20 w-auto md:h-24 {{ $logoInk }}" />
                 </a>
-                {{-- the bundled logo already reads "Enabling responsible AI"; an uploaded logo gets the tagline beneath it --}}
                 @if ($logoSetting)
                     <p class="text-soft mt-4 max-w-[34ch]">{{ config('ethaika.tagline') }}</p>
                 @endif
@@ -100,7 +91,6 @@
                     <span class="line"><span>{{ Str::before($display, '@') }}</span></span><span class="line"><span>{{ '@' . Str::after($display, '@') }}</span></span>
                 </a>
             @else
-                {{-- the name returns at full width, centred; on hover the letters rise in a wave and turn blue --}}
                 <a href="{{ route('contact') }}" class="foot-mark group mx-auto block w-fit text-center" aria-label="Schedule a demo with {{ $name }}">
                     <span class="line"><span class="fm text-[clamp(4rem,19vw,18rem)] leading-[0.82] font-bold tracking-[-0.06em]" aria-hidden="true">@foreach (mb_str_split($name) as $i => $ch)<span class="fm-l" style="--d: {{ $i * 45 }}ms">{{ $ch }}</span>@endforeach</span></span>
                     <span class="fm-cta text-accent mt-3 inline-flex items-center gap-2 text-[1.0625rem] font-semibold">Schedule Demo <svg class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5" /></svg></span>

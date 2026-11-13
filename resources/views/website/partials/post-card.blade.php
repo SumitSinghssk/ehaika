@@ -1,7 +1,3 @@
-{{--
-    One blog card, used everywhere a post is listed (blog listing, category pages, "Keep reading").
-    $post: a Blog with its categories loaded. $heading: the tag for the title (h2 in a listing, h3 under a section heading).
---}}
 @php
     $heading ??= 'h2';
 @endphp

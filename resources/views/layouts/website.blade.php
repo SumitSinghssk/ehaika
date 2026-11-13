@@ -1,9 +1,3 @@
-{{--
-    Public website layout (Ethaika, light).
-    Every page passes its own SEO defaults; an SEO record saved in Admin → SEO for the same path overrides them.
-    Brief: docs/ethaika-home-prompt.md
---}}
-
 <x-app body-class="site-light">
     @include('layouts.partials.website.seo', [
         'pageTitle' => $title,
@@ -20,7 +14,6 @@
 
     @push('head-scripts')
         <script>
-            // Motion hides only what it will reveal. If the motion script never starts, show everything.
             document.documentElement.classList.add('js');
             setTimeout(() => window.__ethaikaMotion || document.documentElement.classList.remove('js'), 3000);
         </script>

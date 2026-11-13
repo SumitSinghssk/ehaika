@@ -1,12 +1,5 @@
 <?php
 
-/*
- * Ethaika website copy, kept as it appears on ethaika.com (home, features and
- * contact pages). Change it here and the home page follows.
- *
- * Header and footer links come from Admin → Menus; contact details and social
- * links from Admin → Settings. Brief: docs/ethaika-home-prompt.md
- */
 return [
 
     'tagline' => 'Enabling responsible AI',
@@ -58,7 +51,6 @@ return [
         'title' => 'Evaluation results streaming back in real time context.',
         'text' => 'Watch judge scores, pass rates, and latency metrics update live as your simulation runs — no waiting for a batch job to finish. Ethaika streams every evaluated turn back instantly so your team can act on quality issues the moment they surface.',
         'action' => 'Book Your Demo',
-        // the product screens shown on ethaika.com
         'screens' => [
             ['src' => 'images/site/architecture.webp', 'name' => 'Ethaika Platform', 'alt' => 'Ethaika platform architecture: scaled simulation, cross-platform evaluation and reports connected to enterprise agents'],
             ['src' => 'images/site/trends-dashboard.webp', 'name' => 'Trends', 'alt' => 'Ethaika trends dashboard comparing evaluation runs'],
@@ -71,7 +63,6 @@ return [
         'title' => 'Distinct features that truly stand out.',
         'compare' => [
             'columns' => ['Capability', 'Vendor Tools', 'Eval Frameworks', 'Observability', 'Ethaika'],
-            // each cell: [mark, text], where mark is yes, part or no
             'rows' => [
                 ['Cross-Platform', ['no', 'Stack-locked'], ['part', 'Partial'], ['no', 'Monitor only'], ['yes', 'Native across models and platforms']],
                 ['Vendor-Neutral', ['no', 'Biased'], ['yes', 'Technical neutrality'], ['part', 'N/A'], ['yes', 'Decision-neutral orchestration']],
@@ -122,7 +113,6 @@ return [
         ],
     ],
 
-    // from the Contact Us page
     'contact' => [
         'label' => 'We’re Here For You',
         'title' => 'We’re ready to listen and respond',
@@ -132,13 +122,11 @@ return [
         'action' => 'Schedule Demo',
     ],
 
-    // photographs from the About page
     'photos' => [
         'team' => ['src' => 'images/site/team-review.webp', 'alt' => 'Two people reviewing an Ethaika evaluation run on a monitor'],
         'engineers' => ['src' => 'images/site/team-engineers.webp', 'alt' => 'Two engineers working on an AI model at their desks'],
     ],
 
-    /* ---------------- Platform page (ethaika.com/enterprise-ai-decision-intelligence) ---------------- */
     'platform' => [
         'meta' => 'Enterprise AI Decision Intelligence: cross-platform evaluation that helps enterprises choose the best models, architectures and workflows before committing spend.',
         'title' => 'Enterprises Are Making Costly LLM Decisions Blindly',
@@ -244,7 +232,6 @@ return [
         ],
     ],
 
-    /* ---------------- Features page (ethaika.com/features) ---------------- */
     'features_page' => [
         'meta' => 'A unified platform for AI simulation, evaluation and quality insights: simulate real user interactions and evaluate AI across DeepEval, Ragas and Azure AI Foundry.',
         'title' => 'A Unified Platform for AI Simulation, Evaluation, and Quality Insights',
@@ -258,7 +245,6 @@ return [
         ],
     ],
 
-    /* ---------------- About page (ethaika.com/about) ---------------- */
     'about' => [
         'meta' => 'At Ethaika, we believe powerful AI must also be transparent, testable, and accountable.',
         'title' => 'Building Trust Into Every AI Decision',
@@ -274,7 +260,6 @@ return [
         ],
     ],
 
-    /* ---------------- Blog listing (ethaika.com/blog) ---------------- */
     'blog' => [
         'title' => 'Latest Updates & Insights Blog.',
         'meta' => 'Ethaika blog and news: insights on AI testing, AI evaluation, LLM-as-Judge and enterprise AI decisions.',

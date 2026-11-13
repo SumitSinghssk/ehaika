@@ -42,7 +42,6 @@ class Blog extends Model
         return $this->hasOne(Seo::class, 'slug', 'slug');
     }
 
-    /** Live on the website: active, and its publish date has come. */
     public function scopePublished($query)
     {
         return $query->where('status', CommonStatusEnum::ACTIVE->value)
@@ -59,7 +58,6 @@ class Blog extends Model
         return $this->featured_image ? media_url($this->featured_image) : null;
     }
 
-    /** Minutes to read at about 220 words a minute. */
     public function readingMinutes(): int
     {
         return max(1, (int) ceil(str_word_count(strip_tags((string) $this->content)) / 220));

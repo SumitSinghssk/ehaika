@@ -1,7 +1,3 @@
-{{--
-    Ethaika home: premium light SaaS layout. Content and images as on ethaika.com (config/ethaika.php).
-    Header and footer: Admin → Menus and Admin → Settings. Motion: resources/js/website.js. Brief: docs/ethaika-home-prompt.md
---}}
 @php
     $c = config('ethaika');
     $description = $c['hero']['text'];
@@ -34,9 +30,7 @@
         ],
     ]"
 >
-    {{-- ============ HERO ============ --}}
     <section id="top" class="relative overflow-hidden pt-[calc(72px+clamp(48px,8vh,96px))]" aria-labelledby="hero-title">
-        {{-- one soft wash of the product blue behind the hero --}}
         <div class="hero-wash pointer-events-none absolute inset-x-0 top-0 -z-10 h-[90%] bg-[radial-gradient(60%_55%_at_50%_0%,#e7eeff_0%,#ffffff_70%)]" aria-hidden="true"></div>
 
         <div class="wrap text-center">
@@ -57,7 +51,6 @@
             </figure>
         </div>
 
-        {{-- integrations as a quiet trust row --}}
         <div class="wrap mt-14 pb-4">
             <p class="text-soft text-center text-[0.875rem] font-medium">{{ $c['integrations']['label'] }}</p>
             <ul class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
@@ -71,7 +64,6 @@
         </div>
     </section>
 
-    {{-- ============ WHY ETHAIKA ============ --}}
     <section id="why" class="sec wrap" aria-labelledby="why-title">
         <div class="mx-auto max-w-[860px] text-center">
             <h2 id="why-title" class="t-head"><span class="line"><span>{{ $c['why']['title'] }}</span></span></h2>
@@ -94,7 +86,6 @@
         </div>
     </section>
 
-    {{-- ============ REAL-TIME EVALUATION DATA: the product screens ============ --}}
     <section id="platform" class="bg-tone" aria-labelledby="rt-title">
         <div class="sec wrap">
             <div class="grid gap-10 md:grid-cols-12 md:items-end">
@@ -115,7 +106,6 @@
                 @endforeach
             </dl>
 
-            {{-- screen viewer: tabs switch the screen; it also advances on its own while in view --}}
             <div class="viewer mt-10" data-viewer>
                 <div class="flex flex-wrap gap-2" role="tablist" aria-label="Ethaika screens">
                     @foreach ($c['realtime']['screens'] as $i => $s)
@@ -157,7 +147,6 @@
         </div>
     </section>
 
-    {{-- ============ INTEGRATIONS ============ --}}
     <section id="integrations" class="sec wrap grid gap-12 md:grid-cols-12 md:items-center" aria-labelledby="int-title">
         <div class="md:col-span-6">
             <h2 id="int-title" class="t-head"><span class="line"><span>{{ $c['integrations']['title'] }}</span></span></h2>
@@ -180,14 +169,12 @@
         </ul>
     </section>
 
-    {{-- ============ FEATURES ============ --}}
     <section id="features" class="bg-tone" aria-labelledby="feat-title">
         <div class="sec wrap">
             <div class="mx-auto max-w-[760px] text-center">
                 <h2 id="feat-title" class="t-head"><span class="line"><span>{{ $c['features']['title'] }}</span></span></h2>
             </div>
 
-            {{-- bento: the six features, two with photographs from the About page --}}
             <div class="mt-12 grid gap-4 lg:grid-cols-3">
                 <article class="feat card will-rise grid overflow-hidden lg:col-span-2 lg:grid-cols-2">
                     <div class="p-8">
@@ -210,7 +197,6 @@
                 </article>
             </div>
 
-            {{-- the comparison, as on ethaika.com --}}
             <div class="cmp card will-rise mt-4 overflow-x-auto">
                 <table class="w-full min-w-[860px] border-collapse text-left text-[0.9375rem]">
                     <caption class="sr-only">Ethaika compared with vendor tools, evaluation frameworks and observability tools</caption>
@@ -238,10 +224,8 @@
         </div>
     </section>
 
-    {{-- ============ FAQ ============ --}}
     @include('website.partials.faq')
 
-    {{-- ============ CONTACT / SCHEDULE DEMO ============ --}}
     <section id="contact" class="wrap pb-[clamp(72px,8vw,120px)]" aria-labelledby="contact-title">
         <div class="bg-accent-tint grid gap-10 overflow-hidden rounded-[28px] p-6 md:grid-cols-12 md:p-12">
             <div class="md:col-span-5 md:py-4">

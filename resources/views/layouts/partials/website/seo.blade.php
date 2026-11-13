@@ -6,7 +6,6 @@
     $path = trim(request()->path(), '/') ?: '/';
     $seoCollection = rescue(fn () => Cache::remember('seo_all', now()->addHours(24), fn () => Seo::all()->keyBy('slug')), collect(), report: false);
 
-    // A record saved in Admin → SEO for this exact path (or this post's slug) wins over the page's own defaults.
     $seoKey = $seoKey ?? null;
     $seo = $seoCollection[$path] ?? ($seoCollection['/'.$path] ?? ($seoKey ? $seoCollection[$seoKey] ?? null : null));
     $fallback = $seoCollection['default-seo'] ?? null;

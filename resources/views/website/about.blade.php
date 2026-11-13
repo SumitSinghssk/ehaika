@@ -1,6 +1,3 @@
-{{--
-    About: ethaika.com/about, in the home page's design. Copy: config('ethaika.about').
---}}
 @php
     $c = config('ethaika');
     $a = $c['about'];
@@ -15,7 +12,6 @@
         'secondary' => ['Explore Features', route('features')],
     ])
 
-    {{-- the two photographs from the About page --}}
     <section class="wrap pb-[clamp(72px,8vw,120px)]" aria-label="The Ethaika team at work">
         <div class="grid gap-4 md:grid-cols-12">
             <figure class="photo will-rise relative overflow-hidden rounded-[calc(var(--radius)+4px)] md:col-span-7">
@@ -27,7 +23,6 @@
         </div>
     </section>
 
-    {{-- on a personal and professional note: the six values --}}
     <section class="bg-tone" aria-labelledby="values-title">
         <div class="sec wrap">
             <div class="mx-auto max-w-[760px] text-center">
@@ -55,7 +50,6 @@
         </div>
     </section>
 
-    {{-- what the platform does, in the site's own words --}}
     <section class="sec wrap" aria-labelledby="feat-title">
         <div class="grid gap-6 md:grid-cols-12 md:items-end">
             <h2 id="feat-title" class="t-head md:col-span-7"><span class="line"><span>{{ $c['features']['title'] }}</span></span></h2>

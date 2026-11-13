@@ -1,7 +1,3 @@
-{{--
-    Blog listing ("Blog & News"), in the home page's design. Posts and categories come from Admin → Blog.
-    $posts (paginated), $categories (active, with published posts), $category (current filter or null).
---}}
 @php
     $b = config('ethaika.blog');
     $title = $category ? $category->name . ' · Blog · Ethaika' : 'Blog & News · Ethaika';
@@ -33,7 +29,6 @@
                 <p class="text-soft mt-2">New articles will appear here as soon as they are published.</p>
             </div>
         @else
-            {{-- every article as a card, newest first --}}
             @if ($posts->isNotEmpty())
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($posts as $post)

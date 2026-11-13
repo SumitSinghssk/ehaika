@@ -59,13 +59,6 @@
     display: none !important;
 }
 
-/* ------------------------------------------------------------------
- * Ethaika, black and white. One ground (white), one ink (near-black),
- * one step of tone (#f2f2f0) to separate surfaces, and the ink as a
- * full field where a section turns over. No shadows at rest, no
- * gradients, no blur, no rules except inside real tables and forms.
- * Type: General Sans, one family. Brief: docs/ethaika-home-prompt.md
- * ------------------------------------------------------------------ */
 @theme {
     --color-paper: #ffffff;
     --color-tone: #f6f7fb;
@@ -73,7 +66,6 @@
     --color-soft: #5b6474;
     --color-fade: #a3aab8;
     --color-line: #e6e9f0;
-    /* accent: Ethaika's product blue, taken from its own screens */
     --color-accent: #2563eb;
     --color-accent-ink: #1e40af;
     --color-accent-tint: #eef3ff;
@@ -134,7 +126,6 @@ html.lenis body {
     padding-inline: var(--margin);
 }
 
-/* sections: compact, even rhythm */
 .sec {
     padding-block: clamp(64px, 8vw, 112px);
 }
@@ -147,7 +138,6 @@ html.lenis body {
     color: rgb(255 255 255 / 0.7);
 }
 
-/* display type: bold, tight, sentence case */
 .t-giant {
     font-weight: 700;
     font-size: var(--step-giant);
@@ -170,7 +160,6 @@ html.lenis body {
     line-height: 1.45;
 }
 
-/* masked line reveal: <span class="line"><span>…</span></span> */
 .line {
     display: block;
     overflow: hidden;
@@ -181,7 +170,6 @@ html.lenis body {
     display: block;
 }
 
-/* buttons: square, flat, one fill */
 .btn {
     position: relative;
     isolation: isolate;
@@ -242,7 +230,6 @@ html.lenis body {
     background: var(--color-fade);
 }
 
-/* text links: underline wipes in */
 .ulink {
     position: relative;
 }
@@ -264,12 +251,10 @@ html.lenis body {
     transform-origin: left;
 }
 
-/* product screens are shown in greyscale so the page stays black and white */
 .mono-img {
     filter: none;
 }
 
-/* forms (the only place lines are allowed) */
 .field {
     display: grid;
     gap: 0.5rem;
@@ -307,7 +292,6 @@ html.lenis body {
     font-weight: 500;
 }
 
-/* motion: content is visible without script; only what will be revealed starts hidden */
 @media (prefers-reduced-motion: no-preference) {
     .js .will-rise {
         opacity: 0;
@@ -315,7 +299,6 @@ html.lenis body {
     }
 }
 
-/* long-form content (pages) */
 .site-light .ps-content {
     --ps-ink: var(--color-ink);
     --ps-muted: var(--color-soft);
@@ -325,7 +308,6 @@ html.lenis body {
     --ps-on-accent: #fff;
 }
 
-/* stage slider: solid track, the passed part in ink, a square thumb */
 .stage-range {
     -webkit-appearance: none;
     appearance: none;
@@ -359,10 +341,6 @@ html.lenis body {
     }
 }
 
-/* ------------------------------------------------------------------
- * Premium SaaS layer (light): navy ink, product blue accent, hairline
- * borders instead of heavy fills, framed product screens.
- * ------------------------------------------------------------------ */
 :root {
     --radius: 20px;
 }
@@ -408,13 +386,11 @@ html.lenis body {
     background: currentColor;
 }
 
-/* white surfaces with a hairline, no shadow */
 .card {
     background: var(--color-paper);
     border: 1px solid var(--color-line);
     border-radius: var(--radius);
 }
-/* product screens in a light frame */
 .shot {
     background: var(--color-tone);
     border: 1px solid var(--color-line);
@@ -438,7 +414,6 @@ html.lenis body {
     font-weight: 600;
     letter-spacing: -0.02em;
 }
-/* boxed form fields for the light card */
 .field :is(input, select, textarea) {
     background: var(--color-tone);
     border: 1px solid var(--color-line);
@@ -457,7 +432,6 @@ html.lenis body {
     color: #c62828;
 }
 
-/* long-form text: blog articles and Admin → Pages */
 .prose-eth {
     font-size: 1.125rem;
     line-height: 1.7;
@@ -558,7 +532,6 @@ html.lenis body {
     color: var(--color-ink);
 }
 
-/* footer wordmark: centred and light at rest; only the letter under the cursor lights up (a soft blue) and lifts */
 .fm {
     display: flex;
     justify-content: center;
@@ -610,7 +583,6 @@ html.lenis body {
         transform: none;
     }
 }
-/* error pages: the status code set like the footer wordmark, light, one digit lights up under the cursor */
 .err-mark .fm-l:hover {
     color: #8fb0ff;
     transform: translateY(-0.06em);
@@ -651,7 +623,6 @@ html.lenis body {
     transform: translateX(3px);
 }
 
-/* headroom so lifted letters (the dot of the i) are not clipped by the reveal mask */
 .foot-mark .line {
     padding-top: calc(clamp(4rem, 19vw, 18rem) * 0.22);
     margin-top: calc(clamp(4rem, 19vw, 18rem) * -0.22);

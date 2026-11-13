@@ -1,7 +1,3 @@
-{{--
-    FAQ: sticky heading on the left, the questions in one card on the right (as on the home page).
-    Questions come from config('ethaika.faq'); motion and the smooth open live in resources/js/website.js.
---}}
 @php
     $faq = config('ethaika.faq');
     $check = '<svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7"/></svg>';

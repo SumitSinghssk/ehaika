@@ -1,8 +1,3 @@
-{{--
-    A visitor-side error (4xx) inside the full site: header, the error panel, footer. Never indexed.
-    Inside Admin the main button leads back to the dashboard instead of the home page.
-    Takes the same variables as errors/partials/panel.
---}}
 @php
     $inAdmin = request()->is('admin', 'admin/*');
     $primary ??= $inAdmin

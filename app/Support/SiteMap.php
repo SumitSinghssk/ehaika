@@ -7,13 +7,8 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Page;
 
-/**
- * Every public URL of the website, for sitemap.xml (served live at /sitemap.xml
- * and written to a file by Admin → Settings → Sitemap).
- */
 class SiteMap
 {
-    /** @return array<int, array{loc: string, lastmod: string, priority: string, image?: string}> */
     public static function urls(): array
     {
         $fixed = now()->startOfMonth()->toAtomString();
