@@ -1,44 +1,39 @@
-@php
-    $theme = app(\App\Services\Theme\Theme::class);
-    $themeCss = rescue(fn () => $theme->stylesheetUrl(), null, report: true);
-    $fontLinks = rescue(fn () => $theme->fontLinks(), [], report: false);
-    $followsDevice = rescue(fn () => $theme->get()['style']['dark_mode'] === 'auto', false, report: false);
-@endphp
+{{--
+    Public website layout (Ethaika, light).
+    Every page passes its own SEO defaults; an SEO record saved in Admin → SEO for the same path overrides them.
+    Brief: docs/ethaika-home-prompt.md
+--}}
 
-<x-app body-class="site-theme antialiased">
-    @include('layouts.partials.website.seo')
-
-    @if ($followsDevice)
-        @push('heads')
-            <script>
-                (() => {
-                    const dark = window.matchMedia('(prefers-color-scheme: dark)');
-                    const apply = () => document.documentElement.classList.toggle('dark', dark.matches);
-                    apply();
-                    dark.addEventListener('change', apply);
-                })();
-            </script>
-        @endpush
-    @endif
+<x-app body-class="site-light">
+    @include('layouts.partials.website.seo', [
+        'pageTitle' => $title,
+        'pageDescription' => $description,
+        'pageImage' => $image,
+        'pageType' => $type,
+        'pageSchema' => $schema,
+        'pageNoindex' => $noindex,
+        'breadcrumbs' => $breadcrumbs,
+        'published' => $published,
+        'modified' => $modified,
+        'seoKey' => $seoKey,
+    ])
 
     @push('head-scripts')
+        <script>
+            // Motion hides only what it will reveal. If the motion script never starts, show everything.
+            document.documentElement.classList.add('js');
+            setTimeout(() => window.__ethaikaMotion || document.documentElement.classList.remove('js'), 3000);
+        </script>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" />
         @vite(['resources/css/website.css', 'resources/js/website.js'])
-
-        @if ($fontLinks)
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            @foreach ($fontLinks as $href)
-                <link rel="stylesheet" href="{{ $href }}" />
-            @endforeach
-        @endif
-
-        @if ($themeCss)
-            <link rel="stylesheet" href="{{ $themeCss }}" />
-        @endif
     @endpush
 
+    <a href="#main" class="bg-ink sr-only fixed top-3 left-3 z-[80] px-4 py-2 text-white focus:not-sr-only">Skip to content</a>
+
     @if (auth('web')->check() && rescue(fn () => \App\Support\Maintenance::isOn(), false, report: false))
-        <div class="sticky top-0 z-50 bg-amber-400 px-4 py-2 text-center text-sm font-medium text-amber-950">
+        <div class="bg-ink sticky top-0 z-[70] px-4 py-2 text-center text-sm font-medium text-white">
             Maintenance mode is on: visitors see the maintenance page.
             <a href="{{ route('admin.settings.index', ['tab' => 'maintenance']) }}" class="ml-1 underline underline-offset-2">Turn it off</a>
         </div>
@@ -46,7 +41,7 @@
 
     <x-website.header />
 
-    <main class="min-h-[60vh]">
+    <main id="main">
         {{ $slot }}
     </main>
 
