@@ -11,6 +11,7 @@
 @source '../views/components';
 @source not '../views/components/admin';
 @source '../views/maintenance.blade.php';
+@source '../views/errors';
 @source '../views/vendor/pagination';
 @source '../js/website.js';
 @source inline('p-4');
@@ -56,4 +57,602 @@
 
 [x-cloak] {
     display: none !important;
+}
+
+/* ------------------------------------------------------------------
+ * Ethaika, black and white. One ground (white), one ink (near-black),
+ * one step of tone (#f2f2f0) to separate surfaces, and the ink as a
+ * full field where a section turns over. No shadows at rest, no
+ * gradients, no blur, no rules except inside real tables and forms.
+ * Type: General Sans, one family. Brief: docs/ethaika-home-prompt.md
+ * ------------------------------------------------------------------ */
+@theme {
+    --color-paper: #ffffff;
+    --color-tone: #f6f7fb;
+    --color-ink: #0b1220;
+    --color-soft: #5b6474;
+    --color-fade: #a3aab8;
+    --color-line: #e6e9f0;
+    /* accent: Ethaika's product blue, taken from its own screens */
+    --color-accent: #2563eb;
+    --color-accent-ink: #1e40af;
+    --color-accent-tint: #eef3ff;
+
+    --font-sans: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+
+    --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --breakpoint-md: 769px;
+}
+
+:root {
+    --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+    --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+    --step-head: clamp(1.875rem, 1.1rem + 2.6vw, 3.5rem);
+    --step-display: clamp(2.75rem, 6.2vw, 6.75rem);
+    --step-giant: clamp(3.5rem, 11vw, 12.5rem);
+    --margin: clamp(20px, 2.2vw, 32px);
+    --radius: 14px;
+}
+
+.site-light {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--step-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+}
+.site-light ::selection {
+    background: var(--color-accent);
+    color: var(--color-paper);
+}
+.site-light :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+.site-light .on-ink :focus-visible {
+    outline-color: var(--color-paper);
+}
+
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.wrap {
+    width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: var(--margin);
+}
+
+/* sections: compact, even rhythm */
+.sec {
+    padding-block: clamp(64px, 8vw, 112px);
+}
+.sec-label {
+    font-size: var(--step-small);
+    font-weight: 600;
+    color: var(--color-accent);
+}
+.on-ink .sec-label {
+    color: rgb(255 255 255 / 0.7);
+}
+
+/* display type: bold, tight, sentence case */
+.t-giant {
+    font-weight: 700;
+    font-size: var(--step-giant);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+}
+.t-head {
+    font-weight: 700;
+    font-size: var(--step-head);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+.t-lead {
+    font-size: var(--step-lead);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+.t-small {
+    font-size: var(--step-small);
+    line-height: 1.45;
+}
+
+/* masked line reveal: <span class="line"><span>…</span></span> */
+.line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+}
+.line > span {
+    display: block;
+}
+
+/* buttons: square, flat, one fill */
+.btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 52px;
+    padding: 0 1.5rem;
+    background: var(--color-accent);
+    color: var(--color-paper);
+    font: 500 1rem/1 var(--font-sans);
+    white-space: nowrap;
+    transition: color 0.35s var(--ease-out-soft);
+}
+.btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-ink);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.45s var(--ease-out-soft);
+}
+.btn:hover {
+    color: var(--color-paper);
+}
+.btn:hover::before {
+    transform: scaleY(1);
+}
+.btn:active {
+    transform: translateY(1px);
+}
+.btn svg {
+    transition: transform 0.35s var(--ease-out-soft);
+}
+.btn:hover svg {
+    transform: translateX(4px);
+}
+.btn-line {
+    background: transparent;
+    color: var(--color-accent);
+    box-shadow: inset 0 0 0 1.5px var(--color-accent);
+}
+.btn-line::before {
+    background: var(--color-accent);
+}
+.btn-line:hover {
+    color: var(--color-paper);
+}
+.btn-light {
+    background: var(--color-paper);
+    color: var(--color-ink);
+}
+.btn-light::before {
+    background: var(--color-fade);
+}
+
+/* text links: underline wipes in */
+.ulink {
+    position: relative;
+}
+.ulink::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease-out-soft);
+}
+.ulink:hover::after,
+.ulink[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* product screens are shown in greyscale so the page stays black and white */
+.mono-img {
+    filter: none;
+}
+
+/* forms (the only place lines are allowed) */
+.field {
+    display: grid;
+    gap: 0.5rem;
+}
+.field label {
+    font-size: var(--step-small);
+    font-weight: 500;
+}
+.field :is(input, select, textarea) {
+    width: 100%;
+    background: transparent;
+    color: inherit;
+    border: 0;
+    border-bottom: 1.5px solid currentColor;
+    border-radius: 0;
+    padding: 0.7rem 0;
+    font: 400 1.0625rem/1.4 var(--font-sans);
+    opacity: 0.92;
+    transition: opacity 0.2s;
+}
+.field :is(input, select, textarea)::placeholder {
+    color: inherit;
+    opacity: 0.45;
+}
+.field :is(input, select, textarea):focus {
+    outline: none;
+    opacity: 1;
+    border-bottom-width: 2.5px;
+}
+.field select option {
+    color: var(--color-ink);
+}
+.field .err {
+    font-size: var(--step-small);
+    font-weight: 500;
+}
+
+/* motion: content is visible without script; only what will be revealed starts hidden */
+@media (prefers-reduced-motion: no-preference) {
+    .js .will-rise {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+}
+
+/* long-form content (pages) */
+.site-light .ps-content {
+    --ps-ink: var(--color-ink);
+    --ps-muted: var(--color-soft);
+    --ps-soft: var(--color-tone);
+    --ps-line: var(--color-tone);
+    --ps-accent: var(--color-ink);
+    --ps-on-accent: #fff;
+}
+
+/* stage slider: solid track, the passed part in ink, a square thumb */
+.stage-range {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+.stage-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 32px;
+    height: 32px;
+    background: var(--color-ink);
+    border: 0;
+    transition: transform 0.2s;
+}
+.stage-range:active::-webkit-slider-thumb {
+    transform: scale(1.12);
+}
+.stage-range::-moz-range-thumb {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 0;
+    background: var(--color-ink);
+}
+@media (max-width: 768px) {
+    .stage-range::-webkit-slider-thumb {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ------------------------------------------------------------------
+ * Premium SaaS layer (light): navy ink, product blue accent, hairline
+ * borders instead of heavy fills, framed product screens.
+ * ------------------------------------------------------------------ */
+:root {
+    --radius: 20px;
+}
+.btn {
+    border-radius: 12px;
+    min-height: 50px;
+    font-weight: 600;
+    font-size: 0.975rem;
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.25) inset;
+}
+.btn::before {
+    background: var(--color-accent-ink);
+    border-radius: inherit;
+}
+.btn-line {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.btn-line::before {
+    background: var(--color-tone);
+}
+.btn-line:hover {
+    color: var(--color-ink);
+}
+
+.sec {
+    padding-block: clamp(72px, 8vw, 120px);
+}
+.sec-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+.sec-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 99px;
+    background: currentColor;
+}
+
+/* white surfaces with a hairline, no shadow */
+.card {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+}
+/* product screens in a light frame */
+.shot {
+    background: var(--color-tone);
+    border: 1px solid var(--color-line);
+    border-radius: calc(var(--radius) + 4px);
+    padding: clamp(6px, 0.8vw, 12px);
+}
+.shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+}
+.t-head {
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+}
+
+.feat-h {
+    font-size: 1.3125rem;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+/* boxed form fields for the light card */
+.field :is(input, select, textarea) {
+    background: var(--color-tone);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    opacity: 1;
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.field :is(input, select, textarea):focus {
+    border-width: 1px;
+    border-color: var(--color-accent);
+    background: var(--color-paper);
+    box-shadow: 0 0 0 4px var(--color-accent-tint);
+}
+.field .err {
+    color: #c62828;
+}
+
+/* long-form text: blog articles and Admin → Pages */
+.prose-eth {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #2a3242;
+}
+.prose-eth > * + * {
+    margin-top: 1.1em;
+}
+.prose-eth :is(h1, h2) {
+    margin-top: 2.2em;
+    font-size: clamp(1.625rem, 2.4vw, 2.125rem);
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+}
+.prose-eth h3 {
+    margin-top: 1.8em;
+    font-size: 1.3125rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+}
+.prose-eth h4 {
+    margin-top: 1.6em;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth > :first-child {
+    margin-top: 0;
+}
+.prose-eth strong {
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.prose-eth :is(ul, ol) {
+    padding-left: 1.4em;
+}
+.prose-eth ul {
+    list-style: disc;
+}
+.prose-eth ol {
+    list-style: decimal;
+}
+.prose-eth li + li {
+    margin-top: 0.45em;
+}
+.prose-eth li::marker {
+    color: var(--color-accent);
+}
+.prose-eth blockquote {
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-accent-tint);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.1em 1.4em;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+.prose-eth img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block: 2em;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-line);
+}
+.prose-eth table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.975rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+@media (max-width: 768px) {
+    .prose-eth table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+.prose-eth :is(th, td) {
+    padding: 0.75em 1em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-line);
+}
+.prose-eth th {
+    background: var(--color-tone);
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+/* footer wordmark: centred and light at rest; only the letter under the cursor lights up (a soft blue) and lifts */
+.fm {
+    display: flex;
+    justify-content: center;
+    color: #dfe3ec;
+}
+.fm-l {
+    display: inline-block;
+    transition:
+        transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+        color 0.35s ease;
+}
+.foot-mark .fm-l:hover {
+    color: #8fb0ff;
+    transform: translateY(-0.08em);
+}
+.foot-mark:focus-visible .fm-l {
+    color: #8fb0ff;
+}
+.fm-cta {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.4s ease,
+        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.foot-mark:is(:hover, :focus-visible) .fm-cta {
+    opacity: 1;
+    transform: none;
+}
+.foot-mark:is(:hover, :focus-visible) .fm-cta svg {
+    transform: translateX(4px);
+}
+.fm-cta svg {
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (hover: none) {
+    .fm-cta {
+        opacity: 1;
+        transform: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fm-l,
+    .fm-cta {
+        transition: color 0.3s ease;
+    }
+    .foot-mark:is(:hover, :focus-visible) .fm-l,
+    .foot-mark .fm-l:hover {
+        transform: none;
+    }
+}
+/* error pages: the status code set like the footer wordmark, light, one digit lights up under the cursor */
+.err-mark .fm-l:hover {
+    color: #8fb0ff;
+    transform: translateY(-0.06em);
+}
+@media (prefers-reduced-motion: reduce) {
+    .err-mark .fm-l:hover {
+        transform: none;
+    }
+}
+.err-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    background: #fff;
+    font-weight: 600;
+    transition:
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.err-link svg {
+    color: var(--color-fade);
+    transition:
+        transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+        color 0.3s ease;
+}
+.err-link:hover {
+    border-color: #c7d6fb;
+    color: var(--color-accent-ink);
+    transform: translateY(-2px);
+}
+.err-link:hover svg {
+    color: var(--color-accent);
+    transform: translateX(3px);
+}
+
+/* headroom so lifted letters (the dot of the i) are not clipped by the reveal mask */
+.foot-mark .line {
+    padding-top: calc(clamp(4rem, 19vw, 18rem) * 0.22);
+    margin-top: calc(clamp(4rem, 19vw, 18rem) * -0.22);
 }

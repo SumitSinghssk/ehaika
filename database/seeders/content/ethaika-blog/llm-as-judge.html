@@ -1,0 +1,53 @@
+<h2>1. The Evaluation Problem No One Talks About</h2>
+<p>You’ve launched your AI agent. Thousands of responses are being generated every day. Now ask yourself: How many of those responses did anyone actually review?</p>
+<p>For most AI teams, the honest answer is: a “tiny fraction”</p>
+<p>Reviewed by humans slowly, inconsistently, and at enormous cost. This is the evaluation gap one of the most underappreciated risks in production AI today.</p>
+<h2>2. What Is LLM-as-Judge?</h2>
+<p>“LLM-as-Judge” is an evaluation technique where a large language model is used to assess the quality of another model’s outputs.</p>
+<p>Instead of relying solely on human reviewers, you deploy a judge model to score responses against defined criteria:</p>
+<ul><li>Is the answer factually accurate?</li>
+<li>Is it relevant to the user’s question?</li>
+<li>Does it follow the system’s guidelines and tone?</li>
+<li>Is it safe, grounded, and appropriately cited?</li>
+<li>Does it avoid hallucination?</li></ul>
+<p>The judge returns a structured score, often with a rationale, that can be logged, tracked, and acted on automatically.</p>
+<h2>3. Why Human Evaluation Doesn’t Scale</h2>
+<ul><li><strong>Speed:</strong>
+A human reviewer assesses maybe 50-100 responses per hour. An LLM judge evaluates thousands per minute.</li>
+<li><strong>Consistency:</strong>
+Human raters drift. An LLM judge applies the same criteria every time.</li>
+<li><strong>Cost:</strong>
+LLM evaluation costs a fraction of human annotation.</li>
+<li><strong>Coverage:</strong>
+LLM judges can evaluate 100% of interactions.</li></ul>
+<p>This doesn’t mean removing humans from the loop. It means using humans where they add the most value calibrating rubrics, reviewing edge cases, and validating the judge itself.</p>
+<h2>4. The Risks You Need to Know</h2>
+<p>LLM as Judge is powerful, but not without pitfalls:</p>
+<ul><li><strong>Position bias:</strong>
+LLM judges favor responses that appear earlier in a comparison prompt.</li>
+<li><strong>Verbosity bias:</strong>
+Longer responses often score higher, even when less accurate.</li>
+<li><strong>Self-serving bias:</strong>
+A model judging its own outputs rates them more favourably.</li>
+<li><strong>Rubric drift:</strong>
+Without version control, evaluation criteria change silently.</li>
+<li><strong>Hallucinated rationales:</strong>
+The judge can produce convincing explanations for incorrect scores.</li></ul>
+<p>These risks are real, but manageable with the right infrastructure.</p>
+<img src="{{img:llm-as-judge-in-practice.webp}}" alt="">
+<h2>How Ethaika Makes LLM-as-Judge Production-Ready</h2>
+<p>At Ethaika, LLM-as-Judge isn’t a prototype, it’s a core component of our evaluation infrastructure.</p>
+<ul><li><strong>Versioned judge prompts</strong>
+– Every change to a rubric is tracked.</li>
+<li><strong>Human-in-the-loop calibration</strong>
+– Compare judge scores against human ratings to detect drift.</li>
+<li><strong>Multi-judge consensus</strong>
+– Run multiple judge models and flag disagreements for human review.</li>
+<li><strong>Full context capture</strong>
+– The judge sees the complete interaction: system prompt, context, tool calls, and parameters.</li>
+<li><strong>Evaluation replay</strong>
+– Re run past interactions through updated rubrics to measure improvement.</li>
+<li><strong>FinOps –</strong>
+visibility into eval cost to measure the value agaisnt every token used.</li>
+<li></li></ul>
+<p>The result: continuous, scalable quality assurance that grows with your AI deployment & not a bottleneck that slows it down.</p>
