@@ -1,0 +1,382 @@
+@props(['breadcrumb' => [], 'title' => null])
+
+@php
+    $pageTitle =
+        $title ?:
+        (collect($breadcrumb)
+            ->pluck('label')
+            ->filter()
+            ->reverse()
+            ->implode(' · ') ?:
+        (request()->is('admin/login')
+            ? 'Login'
+            : 'Dashboard'));
+@endphp
+
+<x-app>
+    @push('heads')
+        <meta name="robots" content="noindex, nofollow" />
+        <title>{{ $pageTitle }} · {{ \App\Helpers\Settings::appName() }} Admin</title>
+        <script>
+            (() => {
+                const root = document.documentElement;
+                const theme = localStorage.getItem('admin-theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const isDark = theme ? theme === 'dark' : prefersDark;
+
+                root.classList.toggle('dark', isDark);
+                root.style.colorScheme = isDark ? 'dark' : 'light';
+
+                if (localStorage.getItem('admin-sidebar') === 'collapsed') root.dataset.sidebar = 'collapsed';
+
+                const sidebarWidth = parseInt(localStorage.getItem('admin-sidebar-width'), 10);
+                if (sidebarWidth >= 200 && sidebarWidth <= 420) root.style.setProperty('--admin-sidebar-w', sidebarWidth + 'px');
+            })();
+        </script>
+    @endpush
+
+    @push('head-scripts')
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        @vite(['resources/css/admin.css', 'resources/js/admin.js'])
+    @endpush
+
+    @if (request()->is('admin/login', 'admin/forgot-password', 'admin/reset-password/*', 'admin/two-factor-challenge'))
+        <div class="admin-theme min-h-screen bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-300">
+            {{ $slot }}
+            <div id="admin-portal" class="relative z-120"></div>
+        </div>
+    @else
+        <div
+            x-data="{
+                workspace: {{ \Illuminate\Support\Js::from($workspace) }},
+                workspaces: {{ \Illuminate\Support\Js::from($workspaces) }},
+                savedWorkspace: {{ \Illuminate\Support\Js::from($savedWorkspace) }},
+                saveTimer: null,
+                saving: Promise.resolve(),
+                setWorkspace(key, reveal = true) {
+                    if (! this.workspaces[key]) return
+                    this.workspace = key
+                    document.cookie = 'admin_workspace=' + key + ';path=/;max-age=31536000;SameSite=Lax'
+                    if (reveal && ! this.desktop) this.sidebarOpen = true
+                    // Debounced so quick back-and-forth toggling sends one request, not a race of many.
+                    clearTimeout(this.saveTimer)
+                    this.saveTimer =
+                        key === this.savedWorkspace ? null : setTimeout(() => this.saveWorkspace(), 400)
+                },
+                saveWorkspace(leaving = false) {
+                    clearTimeout(this.saveTimer)
+                    this.saveTimer = null
+                    const key = this.workspace
+                    if (key === this.savedWorkspace) return
+                    this.savedWorkspace = key
+                    const send = () =>
+                        fetch({{ \Illuminate\Support\Js::from(route('admin.workspace')) }}, {
+                            method: 'POST',
+                            keepalive: leaving,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content ?? '',
+                            },
+                            body: JSON.stringify({ workspace: key }),
+                        }).then((response) => {
+                            if (! response.ok) throw new Error(response.status)
+                        })
+                    // Leaving the page: send now (keepalive survives navigation). Otherwise queue behind any earlier save so they land in order.
+                    const request = leaving ? send() : (this.saving = this.saving.then(send, send))
+                    // Failed (offline, expired session…): forget it was saved so the next page load retries.
+                    request.catch(() => {
+                        if (this.savedWorkspace === key) this.savedWorkspace = null
+                    })
+                },
+                sidebarOpen: false,
+                desktop: window.matchMedia('(min-width: 1024px)').matches,
+                collapsed: document.documentElement.dataset.sidebar === 'collapsed',
+                toggleCollapsed() {
+                    this.collapsed = ! this.collapsed
+                    document.documentElement.dataset.sidebar = this.collapsed
+                        ? 'collapsed'
+                        : ''
+                    try {
+                        localStorage.setItem(
+                            'admin-sidebar',
+                            this.collapsed ? 'collapsed' : 'expanded',
+                        )
+                    } catch (e) {}
+                },
+                resizing: false,
+                sidebarWidth: null,
+                setSidebarWidth(px) {
+                    this.sidebarWidth = Math.round(Math.min(420, Math.max(200, px)))
+                    document.documentElement.style.setProperty(
+                        '--admin-sidebar-w',
+                        this.sidebarWidth + 'px',
+                    )
+                },
+                saveSidebarWidth() {
+                    try {
+                        localStorage.setItem('admin-sidebar-width', this.sidebarWidth)
+                    } catch (e) {}
+                },
+                resetSidebarWidth() {
+                    document.documentElement.style.removeProperty('--admin-sidebar-w')
+                    this.sidebarWidth = null
+                    if (this.collapsed) this.toggleCollapsed()
+                    try {
+                        localStorage.removeItem('admin-sidebar-width')
+                    } catch (e) {}
+                },
+                startResize(event) {
+                    if (! this.desktop || event.button !== 0) return
+                    event.preventDefault()
+                    this.resizing = true
+                    document.body.classList.add('cursor-col-resize', 'select-none')
+
+                    const move = (e) => {
+                        if (e.clientX < 140) {
+                            if (! this.collapsed) this.toggleCollapsed()
+                            return
+                        }
+                        if (this.collapsed) this.toggleCollapsed()
+                        this.setSidebarWidth(e.clientX)
+                    }
+                    const stop = () => {
+                        this.resizing = false
+                        document.body.classList.remove('cursor-col-resize', 'select-none')
+                        window.removeEventListener('pointermove', move)
+                        window.removeEventListener('pointerup', stop)
+                        window.removeEventListener('pointercancel', stop)
+                        if (this.sidebarWidth) this.saveSidebarWidth()
+                    }
+
+                    window.addEventListener('pointermove', move)
+                    window.addEventListener('pointerup', stop)
+                    window.addEventListener('pointercancel', stop)
+                },
+                nudgeSidebar(delta) {
+                    if (this.collapsed) {
+                        if (delta > 0) this.toggleCollapsed()
+                        return
+                    }
+                    const current = this.sidebarWidth ?? this.$refs.sidebar.offsetWidth
+                    if (delta < 0 && current <= 200) return this.toggleCollapsed()
+                    this.setSidebarWidth(current + delta)
+                    this.saveSidebarWidth()
+                },
+            }"
+            x-on:resize.window="
+                desktop = window.matchMedia('(min-width: 1024px)').matches
+                if (desktop) sidebarOpen = false
+            "
+            x-init="setWorkspace(workspace, false)"
+            x-on:pagehide.window="if (saveTimer) saveWorkspace(true)"
+            x-on:keydown.escape.window="sidebarOpen = false"
+            x-effect="
+                document.documentElement.classList.toggle(
+                    'overflow-hidden',
+                    sidebarOpen && ! desktop,
+                )
+            "
+            class="admin-theme relative min-h-screen overflow-hidden bg-slate-100/80 text-slate-700 dark:bg-black dark:text-slate-300"
+        >
+            <div
+                x-show="sidebarOpen"
+                x-cloak
+                x-transition.opacity.duration.200ms
+                x-on:click="sidebarOpen = false"
+                class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] lg:hidden"
+            ></div>
+
+            @include('layouts.partials.admin.sidebar')
+
+            <div
+                :class="resizing && 'transition-none!'"
+                class="lg:collapsed:pl-17 flex h-screen flex-col transition-[padding] duration-200 lg:pl-[calc(var(--sidebar-w)+var(--spacing)*2)]"
+            >
+                <div
+                    class="flex h-screen flex-1 flex-col overflow-hidden bg-slate-50 lg:my-2 lg:h-[calc(100vh-1rem)] lg:rounded-2xl lg:border lg:border-slate-200/80 lg:shadow-xs dark:bg-slate-950 dark:lg:border-slate-800/80"
+                >
+                    <div class="shrink-0">
+                        @include('layouts.partials.admin.header', ['breadcrumb' => $breadcrumb ?? []])
+                    </div>
+
+                    <main class="flex-1 overflow-x-hidden overflow-y-auto p-4">
+                        {{ $slot }}
+                    </main>
+
+                    <footer
+                        class="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-slate-200/70 p-2 text-xs text-slate-400 dark:border-slate-800/70 dark:text-slate-500"
+                    >
+                        <span>© {{ date('Y') }} {{ \App\Helpers\Settings::appName() }}</span>
+                        <span class="hidden items-center gap-1.5 sm:inline-flex">
+                            Press
+                            <kbd
+                                class="rounded border border-slate-200 bg-white px-1 font-sans text-[10px] font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-900"
+                            >
+                                Ctrl K
+                            </kbd>
+                            to search anything
+                        </span>
+                    </footer>
+                </div>
+            </div>
+
+            @include('layouts.partials.admin.command-palette')
+            @include('layouts.partials.admin.idle-warning')
+
+            <div id="admin-portal" class="relative z-120"></div>
+        </div>
+
+        @push('scripts')
+            <script src="{{ asset('plugins/tinymce/tinymce.min.js') }}"></script>
+            <style>
+                .tox-promotion,
+                .tox-statusbar__branding {
+                    display: none;
+                }
+
+                .admin-theme .tox-tinymce {
+                    border-radius: 10px;
+                    border-color: var(--color-slate-200);
+                }
+
+                .dark .admin-theme .tox-tinymce {
+                    border-color: var(--color-slate-700);
+                }
+            </style>
+            <script defer>
+                function initTinyMCE(isDark) {
+                    let content = '';
+
+                    if (tinymce.get()) {
+                        const editor = tinymce.activeEditor;
+                        if (editor) {
+                            content = editor.getContent();
+                        }
+                        tinymce.remove();
+                    }
+
+                    tinymce.init({
+                        license_key: 'gpl',
+                        selector: 'textarea.tinymce',
+                        height: 550,
+                        convert_urls: false,
+
+                        skin: isDark ? 'oxide-dark' : 'oxide',
+                        content_css: isDark ? 'dark' : '{{ Vite::asset('resources/css/website.css') }}',
+
+                        plugins: ['lists', 'code', 'image', 'media', 'link', 'table', 'accordion', 'charmap', 'emoticons', 'advlist'],
+
+                        toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist',
+
+                        body_class: 'modern-content p-4',
+
+                        setup: function (editor) {
+                            editor.on('init', function () {
+                                if (content) {
+                                    editor.setContent(content);
+                                }
+                            });
+                        },
+
+                        images_upload_handler: function (blobInfo, progress) {
+                            return new Promise((resolve, reject) => {
+                                let xhr = new XMLHttpRequest();
+                                xhr.open('POST', '{{ route('admin.images.store') }}');
+                                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+                                xhr.upload.onprogress = function (e) {
+                                    progress((e.loaded / e.total) * 100);
+                                };
+
+                                xhr.onload = function () {
+                                    if (xhr.status === 403) {
+                                        reject('CSRF token mismatch.');
+                                        return;
+                                    }
+
+                                    if (xhr.status < 200 || xhr.status >= 300) {
+                                        reject('HTTP Error: ' + xhr.status);
+                                        return;
+                                    }
+
+                                    let json;
+                                    try {
+                                        json = JSON.parse(xhr.responseText);
+                                    } catch (e) {
+                                        reject('Invalid JSON: ' + xhr.responseText);
+                                        return;
+                                    }
+
+                                    if (!json || typeof json.location !== 'string') {
+                                        reject('Invalid response format');
+                                        return;
+                                    }
+
+                                    resolve(json.location);
+                                };
+
+                                xhr.onerror = function () {
+                                    reject('Image upload failed.');
+                                };
+
+                                let formData = new FormData();
+                                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                                xhr.send(formData);
+                            });
+                        },
+                    });
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const isDark = document.documentElement.classList.contains('dark');
+
+                    initTinyMCE(isDark);
+
+                    window.addEventListener('admin-theme-changed', function (e) {
+                        initTinyMCE(e.detail.isDark);
+                    });
+
+                    document.querySelectorAll('textarea.tinymce[required]').forEach((textarea) => {
+                        textarea.removeAttribute('required');
+                        textarea.dataset.required = 'true';
+                    });
+
+                    const form = document.querySelector('textarea.tinymce')?.closest('form');
+                    if (!form) return;
+
+                    form.addEventListener('submit', function (e) {
+                        if (window.tinymce) tinymce.triggerSave();
+
+                        let firstInvalid = null;
+
+                        form.querySelectorAll('textarea.tinymce[data-required="true"]').forEach((textarea) => {
+                            const editor = tinymce.get(textarea.id);
+                            const value = editor ? editor.getContent({ format: 'text' }).trim() : textarea.value.trim();
+
+                            if (!value && !firstInvalid) {
+                                firstInvalid = { textarea, editor };
+                            }
+                        });
+
+                        if (firstInvalid) {
+                            e.preventDefault();
+                            const { textarea, editor } = firstInvalid;
+                            const container = editor ? editor.getContainer() : textarea;
+
+                            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            container.classList.add('ring-2', 'ring-red-500', 'rounded-lg');
+                            editor ? editor.focus() : textarea.focus();
+                        }
+                    });
+                });
+            </script>
+        @endpush
+
+        <x-admin.toast />
+    @endif
+</x-app>
