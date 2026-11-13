@@ -1,7 +1,3 @@
-{{--
-    Pages built in Admin → Pages (Privacy Policy, Terms of Service, Cookie Policy and any new page), in the home page's design.
-    The body is the saved HTML: plain text styled by .prose-eth, and the editor's content blocks (.ps-*) styled by content-blocks.css.
---}}
 <x-website
     :title="$page->title . ' · Ethaika'"
     :description="\Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags((string) $page->content))), 160)"

@@ -24,7 +24,6 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
-// Pages built in Admin → Pages (privacy policy, terms of service and any new page) live at /{slug}.
 Route::get('/{slug}', [PageController::class, 'show'])
     ->where('slug', '(?!(?:admin|up|storage|build|blog|sitemap)$)[a-z0-9]+(?:-[a-z0-9]+)*')
     ->name('page.show');

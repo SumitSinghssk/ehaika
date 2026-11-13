@@ -1,8 +1,3 @@
-{{--
-    The contact / demo form. Posts to contact.store; each request becomes an Enquiry in Admin.
-    $from: 'home' sends the visitor back to the home page's #contact section, anything else to /contact-us.
-    $subject: the topic selected by default.
---}}
 @php
     $c = config('ethaika.contact');
     $from ??= 'contact';
@@ -22,7 +17,6 @@
 @else
     <h3 class="text-[1.375rem] font-semibold tracking-[-0.02em]">{{ $c['form_title'] }}</h3>
     <p class="text-soft mt-2">{{ $c['form_text'] }}</p>
-    {{-- data-ajax: resources/js/website.js sends it in the background and shows the result here; without script it posts normally --}}
     <form method="POST" action="{{ route('contact.store') }}" class="mt-8 grid gap-6" novalidate data-ajax>
         @csrf
         <input type="hidden" name="_from" value="{{ $from }}" />
@@ -73,7 +67,6 @@
         </div>
     </form>
 
-    {{-- shown in place of the form after a successful background send --}}
     <template data-success>
         <div role="status" tabindex="-1" class="py-10 outline-none">
             <span class="bg-accent grid size-12 place-items-center rounded-full text-white">

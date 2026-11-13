@@ -1,7 +1,3 @@
-{{--
-    Closing call to action: a blue-tint panel with a heading, a sentence and one button to the contact page.
-    Pass $title, $text and optionally $action, $facts (list of [label, value]) and $tagline.
---}}
 @php
     $title ??= config('ethaika.platform.cta.title');
     $text ??= config('ethaika.platform.cta.text');

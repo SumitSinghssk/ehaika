@@ -1,4 +1,3 @@
-{{-- The error panel for the standalone pages: $code (string or null), $title, $text, then any extra markup in $slot-like $extra. --}}
 @php
     $arrow = '<svg class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5"/></svg>';
     $email = rescue(fn () => \App\Helpers\Settings::emails()[0] ?? null, null, report: false);

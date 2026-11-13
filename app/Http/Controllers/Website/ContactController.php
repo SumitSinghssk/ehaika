@@ -10,7 +10,6 @@ use Illuminate\Validation\Rule;
 
 class ContactController extends Controller
 {
-    /** The subjects offered on the demo / contact form. */
     public const SUBJECTS = [
         'demo' => 'Book a demo',
         'evaluation' => 'Product / model evaluation',
@@ -56,8 +55,6 @@ class ContactController extends Controller
             route('admin.enquiries.show', $enquiry),
         ), report: false);
 
-        // Sent from the page's script (no reload): answer with JSON. Validation and bot-check
-        // failures are already answered as JSON 422 by Laravel for these requests.
         if ($request->expectsJson()) {
             return response()->json([
                 'ok' => true,
@@ -66,7 +63,6 @@ class ContactController extends Controller
             ]);
         }
 
-        // Without script: the home page has its own form, so send the visitor back to it, not to /contact-us.
         $back = $request->input('_from') === 'home' ? redirect()->to(url('/').'#contact') : to_route('contact');
 
         return $back->with('sent', $data['name']);

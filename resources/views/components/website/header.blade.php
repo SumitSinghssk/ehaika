@@ -1,9 +1,3 @@
-{{--
-    Site header: a plain white bar. Wordmark, the links from Admin → Menus → Header
-    (a link with nested links opens a small dropdown), and one action.
-    The logo comes from Admin → Settings; the bundled white wordmark is shown in ink.
-    It hides when the visitor scrolls down and returns on a small scroll up (resources/js/website.js).
---}}
 @php
     use App\Helpers\Settings;
 
@@ -82,7 +76,6 @@
         </div>
     </div>
 
-    {{-- phone menu: a full white sheet, the links large --}}
     <div id="siteMenu" x-show="open" x-cloak x-transition.opacity.duration.300ms class="bg-paper fixed inset-0 flex flex-col px-[var(--margin)] pt-28 pb-8 md:hidden">
         <nav class="grid gap-1" aria-label="Main">
             @foreach ($items as $i => $item)
@@ -111,7 +104,6 @@
             html.menu-open {
                 overflow: hidden;
             }
-            /* a transform on the header would trap the fixed phone menu inside it */
             html.menu-open #siteHeader {
                 translate: none !important;
             }

@@ -1,14 +1,8 @@
-{{--
-    Error page body, in the home page's design: the blue wash of the page hero, the status code set large and light
-    like the footer wordmark, a title, one sentence and the way back.
-    $code, $title, $text, $primary [label, href], $secondary [label, href] (optional), $links (bool: list the header menu).
---}}
 @php
     $secondary ??= null;
     $links ??= false;
     $arrow = '<svg class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5"/></svg>';
 
-    // the pages most visitors are after, taken from Admin → Menus → Header (Home is already the main button)
     $menu = $links
         ? collect(rescue(fn () => app(\App\Services\Menus\MenuBuilder::class)->tree('header'), [], report: false))
             ->filter(fn ($i) => filled($i['label'] ?? null) && filled($i['url'] ?? null) && rtrim(url($i['url']), '/') !== rtrim(url('/'), '/'))

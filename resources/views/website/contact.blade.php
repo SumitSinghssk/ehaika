@@ -1,8 +1,3 @@
-{{--
-    Contact Us: ethaika.com/contact-us, in the home page's design.
-    The form posts to contact.store and comes back here with errors or a thank-you.
-    Contact details (if any) come from Admin → Settings.
---}}
 @php
     use App\Helpers\Settings;
 

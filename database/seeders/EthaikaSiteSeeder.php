@@ -9,15 +9,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
-/**
- * Ethaika website: header and footer menus plus the basic settings the header and footer read.
- *
- *   php artisan db:seed --class=EthaikaSiteSeeder
- *
- * It replaces the current Header and Footer menus and the name, contacts and social links in
- * Basic settings (a copy of what was there is written to storage/app/ethaika-seed-backup.json first).
- * After that, edit everything in Admin → Menus and Admin → Settings.
- */
 class EthaikaSiteSeeder extends Seeder
 {
     public function run(MenuBuilder $menus): void
@@ -59,7 +50,6 @@ class EthaikaSiteSeeder extends Seeder
             $row('Privacy Policy', '/privacy-policy', 1),
         ]);
 
-        // ethaika.com publishes no email, phone or address: contact goes through the demo form.
         $value = (array) $setting->value;
         $value['app_name'] = 'Ethaika';
         $value['emails'] = [];

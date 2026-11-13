@@ -1,7 +1,3 @@
-{{--
-    A standalone page in the site's design for when the app itself is not healthy (500, 503, maintenance):
-    no menus, no database queries that can fail it. Settings are read inside rescue() with safe defaults.
---}}
 @props(['title', 'back' => null])
 
 @php

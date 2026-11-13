@@ -1,7 +1,3 @@
-{{--
-    Blog article, in the home page's design. $blog (with categories, author), $related (up to two posts).
-    The body is the HTML saved in Admin → Blog; it is styled by .prose-eth (resources/css/website.css).
---}}
 @php
     $category = $blog->categories->first();
     $image = $blog->imageUrl();
@@ -30,7 +26,6 @@
     <article>
         <header class="relative overflow-hidden pt-[calc(72px+clamp(40px,7vh,80px))]">
             <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-full bg-[radial-gradient(60%_60%_at_20%_0%,#e7eeff_0%,#ffffff_70%)]" aria-hidden="true"></div>
-            {{-- left-aligned, on the same columns as the article text below --}}
             <div class="wrap grid lg:grid-cols-12">
                 <div class="lg:col-span-10 xl:col-span-9 xl:col-start-2">
                     <p class="hero-in will-rise text-soft flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.9375rem] font-medium">
@@ -65,7 +60,6 @@
                 {!! $blog->content !!}
             </div>
 
-            {{-- the side note from the article pages on ethaika.com --}}
             <aside class="lg:col-span-4 xl:col-span-3 xl:col-start-10">
                 <div class="lg:sticky lg:top-28">
                     <div class="bg-accent-tint rounded-[var(--radius)] p-7">

@@ -1,7 +1,3 @@
-{{--
-    Features: ethaika.com/features, in the home page's design.
-    Copy: config('ethaika.features_page'), config('ethaika.features'), config('ethaika.integrations'), config('ethaika.realtime').
---}}
 @php
     $c = config('ethaika');
     $fp = $c['features_page'];
@@ -19,7 +15,6 @@
         'imageAlt' => $c['hero']['image_alt'],
     ])
 
-    {{-- the note, the integrations and the real-time figures --}}
     <section class="wrap pb-[clamp(72px,8vw,120px)]" aria-labelledby="int-title">
         <p class="will-rise mx-auto max-w-[60ch] text-center text-[clamp(1.25rem,2vw,1.625rem)] leading-snug font-semibold tracking-[-0.02em]">{{ $fp['note'] }}</p>
         <h2 id="int-title" class="sr-only">{{ $c['integrations']['label'] }}</h2>
@@ -41,7 +36,6 @@
         </dl>
     </section>
 
-    {{-- multi-framework evaluation --}}
     <section class="bg-tone" aria-labelledby="multi-title">
         <div class="sec wrap grid gap-12 lg:grid-cols-12 lg:items-center">
             <div class="lg:col-span-5">
@@ -54,7 +48,6 @@
         </div>
     </section>
 
-    {{-- the six features --}}
     <section id="features" class="sec wrap" aria-labelledby="feat-title">
         <div class="mx-auto max-w-[760px] text-center">
             <h2 id="feat-title" class="t-head"><span class="line"><span>{{ $c['features']['title'] }}</span></span></h2>

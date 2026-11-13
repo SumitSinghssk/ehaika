@@ -1,8 +1,3 @@
-{{--
-    Inner-page header, matching the home hero: soft blue wash, centred title, one or two sentences,
-    optional buttons and an optional framed product screen.
-    $title, $text (string or list), $primary [label, href], $secondary [label, href], $image, $imageAlt.
---}}
 @php
     $text = (array) ($text ?? []);
     $primary ??= null;

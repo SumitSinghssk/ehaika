@@ -6,10 +6,6 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-/**
- * Public website layout. Each page passes its own SEO defaults; a record in
- * Admin → SEO for the same path overrides them.
- */
 class Website extends Component
 {
     public function __construct(

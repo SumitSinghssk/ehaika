@@ -1,7 +1,3 @@
-{{--
-    Shown to visitors while maintenance mode is on (Admin → Settings → Maintenance), in the site's design.
-    $maintenance: title and message from Settings; $back: when the site is expected back; $preview: the admin preview.
---}}
 <x-website.bare :title="$maintenance['title']">
     @if (! empty($preview))
         <x-slot:before>

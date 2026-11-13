@@ -7,13 +7,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { setupFaqs } from './admin/content-blocks';
 
-/*
- * Ethaika website: behaviour and motion. Brief: docs/ethaika-home-prompt.md
- * Progressive: without script every section is readable; with reduced motion
- * nothing travels, while the header, the FAQ and the form still work.
- * Motion is transform, opacity and clip-path only.
- */
-
 gsap.registerPlugin(ScrollTrigger);
 window.Alpine = Alpine;
 window.Swiper = Swiper;
@@ -23,7 +16,6 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const HEADER = 72;
 
-/* ---------------- smooth scroll and in-page links ---------------- */
 let lenis = null;
 function setupScroll() {
     if (!reducedMotion) {
@@ -39,7 +31,6 @@ function setupScroll() {
         else window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY + offset, behavior: immediate || reducedMotion ? 'auto' : 'smooth' });
     };
 
-    // menu links are stored as absolute URLs (…/public/#features): treat any link to this page's #id as in-page
     document.addEventListener('click', (e) => {
         const a = e.target.closest('a[href]');
         if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
@@ -47,7 +38,6 @@ function setupScroll() {
         const samePage = url.origin === location.origin && url.pathname.replace(/\/$/, '') === location.pathname.replace(/\/$/, '');
         if (!samePage) return;
         if (!url.hash) {
-            // a link to this same page without a hash (Home): glide to the top
             e.preventDefault();
             history.replaceState(null, '', location.pathname);
             lenis ? lenis.scrollTo(0, { duration: 1.3 }) : window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -60,7 +50,6 @@ function setupScroll() {
         go(target);
     });
 
-    // arriving with a hash (or back from the form with errors or a thank-you): land on it
     const landing =
         (location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)))) ||
         ($('#contact [aria-invalid="true"], #contact [role="status"]') && $('#contact'));
@@ -70,11 +59,6 @@ function setupScroll() {
     }
 }
 
-/* ---------------- header ---------------- */
-/*
- * Hides when the visitor scrolls down, comes back after a small scroll up.
- * Driven by the visitor's own input (wheel, touch, keys), so automatic glides never toggle it.
- */
 function setupHeader() {
     const header = $('#siteHeader');
     if (!header) return;
@@ -126,7 +110,6 @@ function setupHeader() {
     apply();
 }
 
-/* ---------------- FAQ: details open and close with a smooth height ---------------- */
 function setupDetails() {
     $$('details.faq').forEach((d) => {
         const summary = $('summary', d);
@@ -145,7 +128,6 @@ function setupDetails() {
     });
 }
 
-/* ---------------- screen viewer: tabs, auto-advance while in view ---------------- */
 function setupViewer() {
     $$('[data-viewer]').forEach(setupOneViewer);
 }
@@ -194,13 +176,6 @@ function setupOneViewer(root) {
     });
 }
 
-
-/* ---------------- contact form: sent in the background, answered in place ---------------- */
-/*
- * Posts the form with fetch (Accept: application/json). Success replaces the form with the thank-you;
- * validation or bot-check errors (422) appear under each field; other failures show one message.
- * Without script the form posts normally and the page reloads with the same result.
- */
 function setupForms() {
     $$('form[data-ajax]').forEach((form) => {
         const box = form.closest('[data-contact]');
@@ -285,7 +260,6 @@ function setupForms() {
     });
 }
 
-/* ---------------- motion ---------------- */
 const rise = (targets, trigger, vars = {}) => {
     const els = typeof targets === 'string' ? $$(targets) : [].concat(targets).filter(Boolean);
     if (!els.length) return;
@@ -309,7 +283,6 @@ function setupMotion() {
         return;
     }
 
-    // headings: every line rises out of its mask once the heading enters
     $$('h1, h2').forEach((h) => {
         const lines = $$('.line > span', h);
         if (!lines.length) return;
@@ -324,7 +297,6 @@ function setupMotion() {
         });
     });
 
-    // hero: text follows the title; the product screen lifts upright as the page scrolls
     gsap.to('.hero-in', { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.1, delay: 0.4 });
     const shot = $('.hero-shot');
     if (shot) {
@@ -333,7 +305,6 @@ function setupMotion() {
     }
     rise('.trust', '.trust', { stagger: 0.06, duration: 0.8 });
 
-    // why ethaika: the figures card, which counts up, then the button
     rise('.why-card', '.why-card');
     rise('.why-in', '.why-in');
     $$('.count').forEach((el) => {
@@ -349,16 +320,13 @@ function setupMotion() {
         });
     });
 
-    // real-time data: text, figures, the screen viewer rises into place
     rise('.rt-in', '#platform', { stagger: 0.1 });
     rise('#platform .stat', '#platform dl', { stagger: 0.1 });
     gsap.from('.viewer .shot', { y: 50, opacity: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.viewer', start: 'top 85%', once: true } });
 
-    // integrations: text, then the logo tiles one by one
     rise('.int-in', '#integrations');
     rise('.logo', '.int-grid', { stagger: 0.06, duration: 0.9 });
 
-    // features: bento cards in sequence, the photograph settles, then the table rows
     rise('.feat', '#features .feat', { stagger: 0.08 });
     gsap.to('.feat-img', { scale: 1, ease: 'none', scrollTrigger: { trigger: '.feat-img', start: 'top bottom', end: 'bottom top', scrub: true } });
     rise('.cmp', '.cmp');
@@ -368,17 +336,14 @@ function setupMotion() {
     rise('.faq', '#faq', { stagger: 0.06 });
     rise('.contact-in', '#contact', { stagger: 0.12 });
 
-    // footer: columns, then the name rises at full width
     gsap.from('.foot-rise', { opacity: 0, y: 24, duration: 1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '#siteFooter', start: 'top 85%', once: true } });
     gsap.from('.foot-mark .line > span', { yPercent: 100, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.foot-mark', start: 'top 95%', once: true } });
 
-    // every other part of any page: tiles, cards, panels and paragraphs rise as they enter, in small groups
     ScrollTrigger.batch($$('.will-rise').filter((el) => !el.dataset.risen), {
         start: 'top 90%',
         once: true,
         onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.07 }),
     });
-    // photographs settle while they are in view
     $$('.photo img').forEach((img) => gsap.to(img, { scale: 1, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } }));
 
     addEventListener('load', () => ScrollTrigger.refresh());
