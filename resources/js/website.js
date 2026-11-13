@@ -1,10 +1,8 @@
-import './bootstrap';
-
 import Alpine from 'alpinejs';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { setupFaqs } from './admin/content-blocks';
+import { setupFaqs } from './shared/faq';
 
 gsap.registerPlugin(ScrollTrigger);
 window.Alpine = Alpine;
@@ -281,24 +279,15 @@ function setupMotion() {
         return;
     }
 
-    $$('h1, h2').forEach((h) => {
+    $$('h2').forEach((h) => {
         const lines = $$('.line > span', h);
         if (!lines.length) return;
-        const hero = h.id === 'hero-title';
-        gsap.from(lines, {
-            yPercent: 110,
-            duration: 1.15,
-            ease: 'expo.out',
-            stagger: 0.1,
-            delay: hero ? 0.1 : 0,
-            scrollTrigger: hero ? undefined : { trigger: h, start: 'top 90%', once: true },
-        });
+        gsap.from(lines, { yPercent: 110, duration: 1.15, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: h, start: 'top 90%', once: true } });
     });
 
-    gsap.to('.hero-in', { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.1, delay: 0.4 });
+    $$('.hero-in').forEach((el) => (el.dataset.risen = '1'));
     const shot = $('.hero-shot');
     if (shot) {
-        gsap.from(shot, { y: 60, opacity: 0, duration: 1.4, ease: 'expo.out', delay: 0.6 });
         gsap.fromTo(shot, { rotateX: 16, scale: 0.94 }, { rotateX: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: shot, start: 'top 95%', end: 'top 25%', scrub: true } });
     }
     rise('.trust', '.trust', { stagger: 0.06, duration: 0.8 });

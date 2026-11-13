@@ -105,7 +105,7 @@
                     <span class="line"><span>{{ Str::before($display, '@') }}</span></span><span class="line"><span>{{ '@' . Str::after($display, '@') }}</span></span>
                 </a>
             @else
-                <a href="{{ route('contact') }}" class="foot-mark group mx-auto block w-fit text-center" aria-label="Schedule a demo with {{ $name }}">
+                <a href="{{ route('contact') }}" class="foot-mark group mx-auto block w-fit text-center" aria-label="Schedule Demo with {{ $name }}">
                     <span class="line"><span class="fm text-[clamp(4rem,19vw,18rem)] leading-[0.82] font-bold tracking-[-0.06em]" aria-hidden="true">@foreach (mb_str_split($name) as $i => $ch)<span class="fm-l" style="--d: {{ $i * 45 }}ms">{{ $ch }}</span>@endforeach</span></span>
                     <span class="fm-cta text-accent mt-3 inline-flex items-center gap-2 text-[1.0625rem] font-semibold">Schedule Demo <svg class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5" /></svg></span>
                 </a>

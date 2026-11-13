@@ -19,13 +19,13 @@
 
     @if ($page->featured_image)
         <div class="wrap pb-10">
-            <figure class="shot mx-auto max-w-[1080px]"><img src="{{ media_url($page->featured_image) }}" alt="" /></figure>
+            <figure class="shot mx-auto max-w-[1080px]"><x-picture :src="$page->featured_image" location="storage" sizes="(min-width: 1120px) 1080px, 92vw" priority /></figure>
         </div>
     @endif
 
     <div class="wrap pb-[clamp(72px,8vw,120px)]">
         <div class="ps-content prose-eth mx-auto max-w-[760px]">
-            {!! $page->content !!}
+            {!! \App\Support\ResponsiveImage::enhanceHtml($page->content) !!}
         </div>
     </div>
 

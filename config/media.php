@@ -8,7 +8,7 @@ return [
     ],
 
     'exclude' => [
-        'storage' => ['gallery/*/thumbs'],
+        'storage' => ['gallery/*/thumbs', '_responsive'],
         'public' => ['build', 'plugins', 'storage', 'vendor'],
     ],
 

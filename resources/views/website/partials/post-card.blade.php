@@ -1,11 +1,12 @@
 @php
     $heading ??= 'h2';
+    $priority ??= false;
 @endphp
 
 <a href="{{ $post->url() }}" class="post will-rise card group flex flex-col overflow-hidden">
     <div class="bg-tone overflow-hidden">
         @if ($post->imageUrl())
-            <img src="{{ $post->imageUrl() }}" alt="" loading="lazy" class="aspect-[16/10] w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-105" />
+            <x-picture :src="$post->featured_image" location="storage" :priority="$priority" sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw" class="aspect-[16/10] w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-105" />
         @else
             <div class="aspect-[16/10]"></div>
         @endif

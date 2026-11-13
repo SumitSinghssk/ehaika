@@ -19,8 +19,7 @@
         @if ($favicon)
             <link rel="icon" href="{{ $favicon }}" />
         @endif
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" />
+        @include('layouts.partials.website.fonts')
         @vite(['resources/css/website.css'])
     </head>
 

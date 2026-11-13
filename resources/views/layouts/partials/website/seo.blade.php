@@ -11,11 +11,15 @@
     $fallback = $seoCollection['default-seo'] ?? null;
 
     $siteName = Settings::appName();
-    $title = $seo?->meta_title ?: ($pageTitle ?? null) ?: ($fallback?->meta_title ?: $siteName);
-    $description = $seo?->meta_description ?: ($pageDescription ?? null) ?: $fallback?->meta_description;
+    $fill = fn (?string $text) => $text === null ? null : trim(str_replace('{site_name}', $siteName, $text));
+    $title = $fill($seo?->meta_title ?: ($pageTitle ?? null) ?: ($fallback?->meta_title ?: $siteName));
+    $description = $fill($seo?->meta_description ?: ($pageDescription ? \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', $pageDescription)), 155) : null) ?: $fallback?->meta_description);
+    if ($page = (int) request()->query('page')) {
+        $title .= $page > 1 ? " · Page {$page}" : '';
+    }
     $imagePath = $seo?->og_image ?: ($pageImage ?? null);
     $image = $imagePath ? (str_starts_with($imagePath, 'http') ? $imagePath : (str_starts_with($imagePath, '/') ? url($imagePath) : media_url($imagePath))) : url('images/site/og-ethaika.jpg');
-    $canonical = url()->current();
+    $canonical = url()->current().(($page ?? 0) > 1 ? '?page='.$page : '');
     $index = ! ($pageNoindex ?? false) && ($seo?->index ?? true);
     $favicon = Settings::favicon() ?: asset('images/site/favicon.png');
     $scriptSettings = settings('script_settings') ?? [];

@@ -9,12 +9,12 @@ class SeoSeeder extends Seeder
 {
     public function run(): void
     {
-        Seo::updateOrCreate(
+        Seo::firstOrCreate(
             ['slug' => 'default-seo'],
             [
                 'page' => 'Default SEO',
-                'meta_title' => config('app.name').' | Welcome',
-                'meta_description' => 'This is the default SEO description for the website.',
+                'meta_title' => '{site_name} · Trust, Test, and Evaluate your AI Systems',
+                'meta_description' => config('ethaika.hero.text'),
             ]
         );
     }

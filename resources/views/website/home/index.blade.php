@@ -47,7 +47,7 @@
 
         <div class="wrap mt-[clamp(48px,7vh,80px)] [perspective:1800px]">
             <figure class="hero-shot shot mx-auto max-w-[1180px] origin-[50%_0%]">
-                <img src="{{ asset($c['hero']['image']) }}" alt="{{ $c['hero']['image_alt'] }}" width="1672" height="941" fetchpriority="high" />
+                <x-picture :src="$c['hero']['image']" :alt="$c['hero']['image_alt']" sizes="(min-width: 1240px) 1180px, 92vw" priority />
             </figure>
         </div>
 
@@ -56,7 +56,7 @@
             <ul class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
                 @foreach ($c['integrations']['logos'] as $logo)
                     <li class="trust will-rise flex items-center gap-3 opacity-80 transition-opacity duration-300 hover:opacity-100">
-                        <img src="{{ asset($logo['src']) }}" alt="" loading="lazy" @class(['h-7 object-contain', 'w-7 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
+                        <img src="{{ asset($logo['src']) }}" alt="" {!! \App\Support\ResponsiveImage::dimensions($logo['src']) !!} loading="lazy" decoding="async" @class(['h-7 object-contain', 'w-7 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
                         <span class="text-[1.0625rem] font-semibold tracking-[-0.01em]">{{ $logo['name'] }}</span>
                     </li>
                 @endforeach
@@ -126,16 +126,14 @@
                 <div class="shot mt-4">
                     <div class="grid">
                         @foreach ($c['realtime']['screens'] as $i => $s)
-                            <img
+                            <x-picture
+                                :src="$s['src']"
+                                :alt="$s['alt']"
+                                sizes="(min-width: 1024px) 62vw, 92vw"
                                 id="vp-{{ $i }}"
                                 role="tabpanel"
                                 aria-labelledby="vt-{{ $i }}"
-                                src="{{ asset($s['src']) }}"
-                                alt="{{ $s['alt'] }}"
-                                width="1672"
-                                height="941"
-                                loading="lazy"
-                                @class(['v-panel col-start-1 row-start-1 aspect-[16/9] w-full object-cover object-top transition-opacity duration-500', 'opacity-0' => $i > 0])
+                                class="v-panel col-start-1 row-start-1 aspect-[16/9] w-full object-cover object-top transition-opacity duration-500 {{ $i > 0 ? 'opacity-0' : '' }}"
                             />
                         @endforeach
                     </div>
@@ -158,7 +156,7 @@
         <ul class="card int-grid grid grid-cols-2 overflow-hidden md:col-span-6 md:col-start-7 sm:grid-cols-3">
             @foreach ($c['integrations']['logos'] as $i => $logo)
                 <li class="logo will-rise group border-line flex aspect-square flex-col items-center justify-center gap-4 border-r border-b p-5 text-center">
-                    <img src="{{ asset($logo['src']) }}" alt="" loading="lazy" @class(['h-12 object-contain transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:-translate-y-1 group-hover:scale-105', 'w-12 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
+                    <img src="{{ asset($logo['src']) }}" alt="" {!! \App\Support\ResponsiveImage::dimensions($logo['src']) !!} loading="lazy" decoding="async" @class(['h-12 object-contain transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:-translate-y-1 group-hover:scale-105', 'w-12 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
                     <span class="font-semibold">{{ $logo['name'] }}</span>
                 </li>
             @endforeach
@@ -182,7 +180,7 @@
                         @foreach ($f[0]['body'] as $p)<p class="text-soft mt-3">{{ $p }}</p>@endforeach
                     </div>
                     <div class="relative min-h-[260px] overflow-hidden">
-                        <img src="{{ asset($c['photos']['team']['src']) }}" alt="{{ $c['photos']['team']['alt'] }}" loading="lazy" class="feat-img absolute inset-0 size-full scale-110 object-cover" />
+                        <x-picture :src="$c['photos']['team']['src']" :alt="$c['photos']['team']['alt']" sizes="(min-width: 1024px) 40vw, 92vw" class="feat-img absolute inset-0 size-full scale-110 object-cover" />
                     </div>
                 </article>
                 @foreach ([1, 2, 3, 4] as $k)
@@ -232,7 +230,7 @@
                 <h2 id="contact-title" class="t-head"><span class="line"><span>{{ $c['contact']['title'] }}</span></span></h2>
                 <p class="contact-in will-rise text-soft mt-5 max-w-[36ch]">{{ $c['contact']['text'] }}</p>
                 <figure class="contact-in will-rise mt-8 hidden overflow-hidden rounded-[var(--radius)] md:block">
-                    <img src="{{ asset($c['photos']['engineers']['src']) }}" alt="{{ $c['photos']['engineers']['alt'] }}" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+                    <x-picture :src="$c['photos']['engineers']['src']" :alt="$c['photos']['engineers']['alt']" sizes="(min-width: 768px) 36vw, 92vw" class="aspect-[4/3] w-full object-cover" />
                 </figure>
             </div>
 
