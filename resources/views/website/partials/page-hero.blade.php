@@ -26,7 +26,7 @@
     @if ($image)
         <div class="wrap mt-[clamp(48px,7vh,80px)] pb-[clamp(56px,7vw,96px)] [perspective:1800px]">
             <figure class="hero-shot shot mx-auto max-w-[1180px] origin-[50%_0%]">
-                <img src="{{ asset($image) }}" alt="{{ $imageAlt }}" width="1672" height="941" fetchpriority="high" />
+                <x-picture :src="$image" :alt="$imageAlt" sizes="(min-width: 1240px) 1180px, 92vw" priority />
             </figure>
         </div>
     @endif

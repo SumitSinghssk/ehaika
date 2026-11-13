@@ -23,6 +23,13 @@ Route::get('/blog/category/{slug}', [BlogController::class, 'category'])->name('
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/robots.txt', fn () => response(implode("\n", [
+    'User-agent: *',
+    'Disallow: /admin',
+    '',
+    'Sitemap: '.route('sitemap'),
+    '',
+]), 200, ['Content-Type' => 'text/plain; charset=UTF-8', 'Cache-Control' => 'public, max-age=86400']))->name('robots');
 
 Route::get('/{slug}', [PageController::class, 'show'])
     ->where('slug', '(?!(?:admin|up|storage|build|blog|sitemap)$)[a-z0-9]+(?:-[a-z0-9]+)*')

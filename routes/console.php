@@ -206,3 +206,22 @@ Schedule::command('security:purge')->daily();
 
 Schedule::call(fn () => SystemHealth::recordScheduler())->everyMinute()->name('health:heartbeat');
 Schedule::command('health:check')->hourly();
+
+Artisan::command('images:responsive {--force : Rebuild versions that already exist}', function () {
+    $images = app(\App\Support\ResponsiveImage::class);
+    $jobs = collect(glob(public_path('images/site/*.{webp,jpg,jpeg,png}'), GLOB_BRACE))
+        ->map(fn ($file) => ['public', 'images/site/'.basename($file)])
+        ->merge(\App\Models\Blog::withTrashed()->whereNotNull('featured_image')->pluck('featured_image')->map(fn ($p) => ['storage', $p]))
+        ->merge(\App\Models\Page::withTrashed()->whereNotNull('featured_image')->pluck('featured_image')->map(fn ($p) => ['storage', $p]))
+        ->merge(\App\Models\Blog::withTrashed()->pluck('content')->merge(\App\Models\Page::withTrashed()->pluck('content'))
+            ->flatMap(fn ($html) => \App\Support\ResponsiveImage::contentPaths($html))->map(fn ($p) => ['storage', $p]))
+        ->unique(fn ($job) => implode(':', $job));
+
+    $made = 0;
+    foreach ($jobs as [$location, $path]) {
+        $count = $images->generate($location, $path, (bool) $this->option('force'));
+        $made += $count;
+        $this->line(sprintf('%-60s %d new', "$location/$path", $count));
+    }
+    $this->info("Done: {$made} image versions written.");
+})->purpose('Write AVIF and WebP versions of the website images at several widths');

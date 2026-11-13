@@ -49,7 +49,7 @@
                 </div>
                 @if ($image)
                     <figure class="hero-shot shot mt-[clamp(40px,6vh,64px)] origin-[0%_0%] lg:col-span-12 xl:col-span-11 xl:col-start-2">
-                        <img src="{{ $image }}" alt="" fetchpriority="high" class="aspect-[16/9] object-cover" />
+                        <x-picture :src="$blog->featured_image" location="storage" sizes="(min-width: 1280px) 1180px, 94vw" priority class="aspect-[16/9] object-cover" />
                     </figure>
                 @endif
             </div>
@@ -57,7 +57,7 @@
 
         <div class="wrap grid gap-12 py-[clamp(56px,7vw,96px)] lg:grid-cols-12">
             <div class="prose-eth lg:col-span-8 lg:col-start-1 xl:col-span-7 xl:col-start-2">
-                {!! $blog->content !!}
+                {!! \App\Support\ResponsiveImage::enhanceHtml($blog->content) !!}
             </div>
 
             <aside class="lg:col-span-4 xl:col-span-3 xl:col-start-10">

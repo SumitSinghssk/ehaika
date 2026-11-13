@@ -43,6 +43,8 @@ class Page extends Model
 
     protected static function booted(): void
     {
+        static::saved(fn (Page $page) => \App\Support\ResponsiveImage::refreshFor($page));
+
         static::deleting(function (Page $page) {
             if (! $page->isForceDeleting()) {
                 $page->deleted_data = [

@@ -15,10 +15,10 @@
     <section class="wrap pb-[clamp(72px,8vw,120px)]" aria-label="The Ethaika team at work">
         <div class="grid gap-4 md:grid-cols-12">
             <figure class="photo will-rise relative overflow-hidden rounded-[calc(var(--radius)+4px)] md:col-span-7">
-                <img src="{{ asset($c['photos']['team']['src']) }}" alt="{{ $c['photos']['team']['alt'] }}" loading="lazy" class="aspect-[16/11] w-full scale-110 object-cover" />
+                <x-picture :src="$c['photos']['team']['src']" :alt="$c['photos']['team']['alt']" sizes="(min-width: 768px) 56vw, 92vw" class="aspect-[16/11] w-full scale-110 object-cover" />
             </figure>
             <figure class="photo will-rise relative overflow-hidden rounded-[calc(var(--radius)+4px)] md:col-span-5">
-                <img src="{{ asset($c['photos']['engineers']['src']) }}" alt="{{ $c['photos']['engineers']['alt'] }}" loading="lazy" class="aspect-[16/11] w-full scale-110 object-cover md:h-full md:aspect-auto" />
+                <x-picture :src="$c['photos']['engineers']['src']" :alt="$c['photos']['engineers']['alt']" sizes="(min-width: 768px) 40vw, 92vw" class="aspect-[16/11] w-full scale-110 object-cover md:h-full md:aspect-auto" />
             </figure>
         </div>
     </section>

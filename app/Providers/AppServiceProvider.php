@@ -13,7 +13,10 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void {}
+    public function register(): void
+    {
+        $this->app->singleton(\App\Support\ResponsiveImage::class);
+    }
 
     public function boot(): void
     {

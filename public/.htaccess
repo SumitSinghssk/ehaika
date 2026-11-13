@@ -23,3 +23,24 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<IfModule mod_mime.c>
+    AddType image/avif .avif
+    AddType image/webp .webp
+    AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml application/javascript text/javascript application/json application/xml application/rss+xml image/svg+xml
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript text/javascript application/json application/xml application/rss+xml image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|woff2|avif|webp|png|jpe?g|gif|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{REQUEST_URI} =~ m#/(build/assets|fonts)/# || %{QUERY_STRING} =~ /(^|&)v=/"
+        Header set Cache-Control "public, max-age=2592000" "expr=!(%{REQUEST_URI} =~ m#/(build/assets|fonts)/# || %{QUERY_STRING} =~ /(^|&)v=/)"
+    </FilesMatch>
+</IfModule>

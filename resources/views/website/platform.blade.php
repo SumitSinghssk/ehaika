@@ -120,7 +120,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                        <figure class="shot lg:col-span-8"><img src="{{ asset($t['image']) }}" alt="Ethaika {{ $t['title'] }}" width="1672" height="941" loading="lazy" /></figure>
+                        <figure class="shot lg:col-span-8"><x-picture :src="$t['image']" :alt="'Ethaika ' . $t['title']" sizes="(min-width: 1024px) 64vw, 92vw" /></figure>
                     </div>
                 @endforeach
             </div>
@@ -142,7 +142,7 @@
                     @endforeach
                 </div>
             </div>
-            <figure class="shot will-rise lg:col-span-7"><img src="{{ asset($p['how']['image']) }}" alt="Ethaika platform architecture: users, scaled simulation, cross-platform evaluation and reports, connected to enterprise agents and the foundation AI layer through secured config" width="1672" height="941" loading="lazy" /></figure>
+            <figure class="shot will-rise lg:col-span-7"><x-picture :src="$p['how']['image']" alt="Ethaika platform architecture: users, scaled simulation, cross-platform evaluation and reports, connected to enterprise agents and the foundation AI layer through secured config" sizes="(min-width: 1024px) 56vw, 92vw" /></figure>
         </div>
     </section>
 

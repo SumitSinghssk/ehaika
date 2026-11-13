@@ -72,6 +72,8 @@ class Blog extends Model
 
     protected static function booted(): void
     {
+        static::saved(fn (Blog $blog) => \App\Support\ResponsiveImage::refreshFor($blog));
+
         static::deleting(function (Blog $blog) {
             if (! $blog->isForceDeleting()) {
                 $blog->deleted_data = [

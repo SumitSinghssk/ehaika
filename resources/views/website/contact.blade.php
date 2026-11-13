@@ -19,10 +19,10 @@
         <div class="bg-accent-tint grid gap-10 overflow-hidden rounded-[28px] p-6 md:grid-cols-12 md:p-12">
             <div class="md:col-span-5 md:py-4">
                 <h2 class="t-head"><span class="line"><span>{{ $k['label'] }}</span></span></h2>
-                <p class="contact-in will-rise text-soft mt-5 max-w-[40ch]">{{ $k['form_text'] }}</p>
+                <p class="hero-in will-rise text-soft mt-5 max-w-[40ch]">{{ $k['form_text'] }}</p>
 
                 @if ($emails->isNotEmpty() || $phones->isNotEmpty() || $addresses->isNotEmpty() || $socials->isNotEmpty())
-                    <dl class="contact-in will-rise card mt-8 grid">
+                    <dl class="hero-in will-rise card mt-8 grid">
                         @foreach ($emails as $email)
                             <div class="border-line px-6 py-4 {{ $loop->first ? '' : 'border-t' }}"><dt class="text-soft text-[0.875rem]">Email</dt><dd class="mt-1 font-semibold"><a class="ulink" href="mailto:{{ $email }}">{{ $email }}</a></dd></div>
                         @endforeach
@@ -38,12 +38,12 @@
                     </dl>
                 @endif
 
-                <figure class="contact-in will-rise mt-8 hidden overflow-hidden rounded-[var(--radius)] md:block">
-                    <img src="{{ asset($c['photos']['engineers']['src']) }}" alt="{{ $c['photos']['engineers']['alt'] }}" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+                <figure class="hero-in will-rise mt-8 hidden overflow-hidden rounded-[var(--radius)] md:block">
+                    <x-picture :src="$c['photos']['engineers']['src']" :alt="$c['photos']['engineers']['alt']" sizes="(min-width: 768px) 36vw, 92vw" class="aspect-[4/3] w-full object-cover" />
                 </figure>
             </div>
 
-            <div class="contact-in will-rise card p-6 md:col-span-7 md:p-10">
+            <div class="hero-in will-rise card p-6 md:col-span-7 md:p-10">
                 @include('website.partials.contact-form', ['from' => 'contact', 'subject' => $subject ?? 'demo'])
             </div>
         </div>

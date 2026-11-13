@@ -21,7 +21,7 @@
         <ul class="card mt-12 grid grid-cols-2 overflow-hidden sm:grid-cols-3 lg:grid-cols-5">
             @foreach ($c['integrations']['logos'] as $logo)
                 <li class="tile will-rise group border-line flex flex-col items-center justify-center gap-3 border-r border-b p-8 text-center">
-                    <img src="{{ asset($logo['src']) }}" alt="" loading="lazy" @class(['h-10 object-contain transition-transform duration-500 group-hover:-translate-y-1', 'w-10 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
+                    <img src="{{ asset($logo['src']) }}" alt="" {!! \App\Support\ResponsiveImage::dimensions($logo['src']) !!} loading="lazy" decoding="async" @class(['h-10 object-contain transition-transform duration-500 group-hover:-translate-y-1', 'w-10 object-left object-cover' => $logo['crop'], 'w-auto' => ! $logo['crop'], 'invert' => $logo['invert']]) />
                     <span class="font-semibold">{{ $logo['name'] }}</span>
                 </li>
             @endforeach
@@ -44,7 +44,7 @@
                 <p class="will-rise text-accent-ink mt-4 font-semibold">{{ $fp['multi']['note'] }}</p>
                 <a href="{{ route('contact') }}" class="will-rise btn mt-8">Book Your Demo <svg class="size-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 8h11m-4.5-4.5L13.5 8 9 12.5" /></svg></a>
             </div>
-            <figure class="shot will-rise lg:col-span-7"><img src="{{ asset($fp['multi']['image']) }}" alt="Ethaika trends dashboard comparing evaluation runs across frameworks" width="1672" height="941" loading="lazy" /></figure>
+            <figure class="shot will-rise lg:col-span-7"><x-picture :src="$fp['multi']['image']" alt="Ethaika trends dashboard comparing evaluation runs across frameworks" sizes="(min-width: 1024px) 56vw, 92vw" /></figure>
         </div>
     </section>
 

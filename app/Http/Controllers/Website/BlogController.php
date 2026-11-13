@@ -59,6 +59,8 @@ class BlogController extends Controller
             ->paginate(9)
             ->withQueryString();
 
+        abort_if($posts->currentPage() > max(1, $posts->lastPage()), 404);
+
         $categories = BlogCategory::where('status', CommonStatusEnum::ACTIVE->value)
             ->whereHas('blogs', fn ($q) => $q->published())
             ->orderBy('name')

@@ -32,7 +32,7 @@
             @if ($posts->isNotEmpty())
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($posts as $post)
-                        @include('website.partials.post-card', ['post' => $post])
+                        @include('website.partials.post-card', ['post' => $post, 'priority' => $loop->first])
                     @endforeach
                 </div>
             @endif
